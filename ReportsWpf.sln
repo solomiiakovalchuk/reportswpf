@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reports.Documents", "src\Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reports.Integration", "src\Reports.Integration\Reports.Integration.csproj", "{9ED314D1-87EA-445F-B5E1-859960DDD10C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reports.Wpf", "src\Reports.Wpf\Reports.Wpf.csproj", "{3F67D0CD-B9AB-4D10-BA88-5B5183FEC856}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reports.Desktop", "src\Reports.Desktop\Reports.Desktop.csproj", "{3F67D0CD-B9AB-4D10-BA88-5B5183FEC856}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
 EndProject

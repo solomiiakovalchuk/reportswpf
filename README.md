@@ -16,7 +16,7 @@ dotnet build ReportsWpf.sln
 ```
 
 ```bash
-dotnet run --project src/Reports.Wpf/Reports.Wpf.csproj
+dotnet run --project src/Reports.Desktop/Reports.Desktop.csproj
 ```
 
 Перший запуск сам створює базу з довідниками-прикладами і шаблон рапорту.
@@ -50,7 +50,7 @@ dotnet run --project lab8/TranslatorTables/TranslatorTables.csproj
 | `src/Reports.Data` | Entity Framework Core + SQLite: контекст, репозиторії, наповнення |
 | `src/Reports.Documents` | Формування `.docx` через OpenXML: шаблон і заміна тегів |
 | `src/Reports.Integration` | Google Sheets API, OAuth, демонстраційне джерело даних |
-| `src/Reports.Wpf` | Інтерфейс WPF за схемою MVVM |
+| `src/Reports.Desktop` | Інтерфейс WPF (MVVM) на бібліотеці WPF-UI (Fluent Design) |
 | `tests/Reports.SmokeTest` | Наскрізна перевірка ланцюга |
 | `lab8/TranslatorTables` | Таблиці транслятора з мови СІ — окрема програма |
 | `docs/` | Тека для звітів і документів лабораторних робіт |
@@ -161,8 +161,9 @@ dotnet run --project lab8/TranslatorTables/TranslatorTables.csproj
 
 ## Технології
 
-.NET 8 · WPF (MVVM) · Entity Framework Core 8 + SQLite ·
-DocumentFormat.OpenXml 3.1 · Google Sheets API v4 (OAuth 2.0, Desktop app)
+.NET 8 · WPF (MVVM) · WPF-UI 3 (Fluent Design, Mica, світла/темна тема) ·
+Entity Framework Core 8 + SQLite · DocumentFormat.OpenXml 3.1 ·
+Google Sheets API v4 (OAuth 2.0, Desktop app, читання + запис)
 
 `nuget.config` у корені обмежує джерела пакетів до nuget.org — щоб збірка
 не залежала від фідів, прописаних на конкретній машині.
