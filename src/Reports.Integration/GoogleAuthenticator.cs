@@ -23,8 +23,11 @@ public sealed class GoogleAccessException : Exception
 /// </summary>
 public sealed class GoogleAuthenticator
 {
-    /// <summary>Достатньо доступу лише на читання таблиці.</summary>
-    private static readonly string[] Scopes = { SheetsService.Scope.SpreadsheetsReadonly };
+    /// <summary>
+    /// Читання й запис таблиці: застосунок не лише забирає відповіді,
+    /// а й дописує довідники, людей і колонку «Статус».
+    /// </summary>
+    private static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
 
     private readonly string _credentialsPath;
     private readonly string _tokenFolder;
@@ -34,7 +37,7 @@ public sealed class GoogleAuthenticator
     {
         _credentialsPath = credentialsPath;
         _tokenFolder = tokenFolder;
-        _applicationName = applicationName;
+        _applicationName = ToHeaderSafe(applicationName);
     }
 
     public string CredentialsPath => _credentialsPath;
@@ -74,6 +77,22 @@ public sealed class GoogleAuthenticator
             HttpClientInitializer = credential,
             ApplicationName = _applicationName
         });
+    }
+
+    /// <summary>
+    /// Прибирає з назви застосунку все, що не входить у ASCII.
+    /// Google-клієнт підставляє її у заголовок User-Agent, а заголовки HTTP
+    /// не допускають символів поза ASCII — кирилиця в назві валить будь-який
+    /// запит із помилкою «The format of value ... is invalid».
+    /// </summary>
+    private static string ToHeaderSafe(string name)
+    {
+        var safe = new string((name ?? string.Empty)
+            .Where(c => c > 31 && c < 127 && c != '(' && c != ')')
+            .ToArray())
+            .Trim();
+
+        return safe.Length == 0 ? "ReportsWpf" : safe;
     }
 
     /// <summary>Забути збережений токен — знадобиться при зміні акаунта.</summary>

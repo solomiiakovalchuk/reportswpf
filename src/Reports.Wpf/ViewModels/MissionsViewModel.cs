@@ -59,6 +59,7 @@ public sealed class MissionsViewModel : ObservableObject
         SyncCommand = new AsyncRelayCommand(SyncAsync);
         ReloadCommand = new AsyncRelayCommand(LoadAsync);
         CancelCommand = new AsyncRelayCommand(ToggleCancelAsync, () => Selected is not null);
+        PublishCommand = new AsyncRelayCommand(PublishAsync, () => !services.Settings.UseDemoData);
     }
 
     public ObservableCollection<MissionRow> Rows { get; } = new();
@@ -78,6 +79,7 @@ public sealed class MissionsViewModel : ObservableObject
     public AsyncRelayCommand SyncCommand { get; }
     public AsyncRelayCommand ReloadCommand { get; }
     public AsyncRelayCommand CancelCommand { get; }
+    public AsyncRelayCommand PublishCommand { get; }
 
     /// <summary>Подія для головної моделі: дані змінилися, оновіть інші вкладки.</summary>
     public event EventHandler? DataChanged;
@@ -118,6 +120,41 @@ public sealed class MissionsViewModel : ObservableObject
         {
             Summary = "Не вдалося синхронізувати: " + ex.Message;
             _report("Помилка синхронізації.");
+        }
+    }
+
+    /// <summary>
+    /// Зворотний запис: дописує в таблицю нові довідники, людей і статуси.
+    /// Викликається окремою дією, а не після кожної правки — щоб запис
+    /// у спільний документ був передбачуваним.
+    /// </summary>
+    private async Task PublishAsync()
+    {
+        var sink = _services.CreateResponseSink();
+        if (sink is null)
+        {
+            Summary = "У демонстраційному режимі вивантажувати нікуди. " +
+                      "Вимкніть демонстраційні дані у налаштуваннях.";
+            return;
+        }
+
+        try
+        {
+            _report($"Вивантаження ({sink.Title})…");
+            var result = await _services.Publish.PublishAsync(sink);
+
+            Summary = result.Describe();
+            _report("Вивантаження завершено.");
+        }
+        catch (GoogleAccessException ex)
+        {
+            Summary = ex.Message;
+            _report("Google: не вдалося вивантажити.");
+        }
+        catch (Exception ex)
+        {
+            Summary = "Не вдалося вивантажити: " + ex.Message;
+            _report("Помилка вивантаження.");
         }
     }
 

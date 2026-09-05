@@ -25,6 +25,7 @@ public sealed class AppServices
         IMissionRepository missions,
         IJournalRepository journal,
         ImportService importService,
+        PublishService publishService,
         ReportService reportService,
         DocxReportRenderer renderer,
         GoogleAuthenticator authenticator,
@@ -38,6 +39,7 @@ public sealed class AppServices
         Missions = missions;
         Journal = journal;
         Import = importService;
+        Publish = publishService;
         Reports = reportService;
         Renderer = renderer;
         Authenticator = authenticator;
@@ -52,6 +54,7 @@ public sealed class AppServices
     public IMissionRepository Missions { get; }
     public IJournalRepository Journal { get; }
     public ImportService Import { get; }
+    public PublishService Publish { get; }
     public ReportService Reports { get; }
     public DocxReportRenderer Renderer { get; }
     public GoogleAuthenticator Authenticator { get; }
@@ -65,6 +68,13 @@ public sealed class AppServices
         Settings.UseDemoData
             ? new DemoResponseSource()
             : new GoogleSheetsResponseSource(Authenticator, Settings);
+
+    /// <summary>
+    /// Приймач для зворотного запису. У демонстраційному режимі його немає:
+    /// вигадані дані нікуди вивантажувати.
+    /// </summary>
+    public IResponseSink? CreateResponseSink() =>
+        Settings.UseDemoData ? null : new GoogleSheetsWriter(Authenticator, Settings);
 
     public static AppServices Create()
     {
@@ -90,8 +100,10 @@ public sealed class AppServices
 
         var authenticator = new GoogleAuthenticator(
             Path.Combine(dataFolder, "credentials.json"),
-            Path.Combine(dataFolder, "token"),
-            "Рапорти БпЛА");
+            // Нова тека: стара згода була лише на читання, потрібна повторна.
+            Path.Combine(dataFolder, "token-rw"),
+            // Лише ASCII: з цієї назви складається заголовок User-Agent.
+            "ReportsWpf");
 
         var reportService = new ReportService(
             missions,
@@ -104,6 +116,7 @@ public sealed class AppServices
             settings, settingsStore, contextFactory,
             references, people, missions, journal,
             new ImportService(missions, references),
+            new PublishService(references, people, missions),
             reportService, renderer, authenticator, dataFolder);
     }
 

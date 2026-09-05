@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 using System.IO;
 using Reports.Core.Services;
 using Reports.Integration;
@@ -15,6 +16,7 @@ public sealed class SettingsViewModel : ObservableObject
 {
     private readonly AppServices _services;
     private readonly Action<string> _report;
+    private string _connectionReport = string.Empty;
 
     public SettingsViewModel(AppServices services, Action<string> report)
     {
@@ -26,6 +28,7 @@ public sealed class SettingsViewModel : ObservableObject
         OpenTemplateCommand = new RelayCommand(() => OpenInShell(_services.TemplatePath));
         OpenDataFolderCommand = new RelayCommand(() => OpenInShell(_services.DataFolder));
         ForgetTokenCommand = new RelayCommand(ForgetToken);
+        CheckConnectionCommand = new AsyncRelayCommand(CheckConnectionAsync, () => !UseDemoData);
     }
 
     private AppSettings S => _services.Settings;
@@ -72,10 +75,18 @@ public sealed class SettingsViewModel : ObservableObject
         set { S.OrderDefault = value; OnPropertyChanged(); }
     }
 
+    /// <summary>
+    /// Ідентифікатор таблиці. Якщо вставили адресу цілком — беремо з неї
+    /// сам ідентифікатор, бо інакше Google відповість «не знайдено».
+    /// </summary>
     public string SpreadsheetId
     {
         get => S.SpreadsheetId;
-        set { S.SpreadsheetId = value; OnPropertyChanged(); }
+        set
+        {
+            S.SpreadsheetId = GoogleSheetsResponseSource.NormalizeSpreadsheetId(value);
+            OnPropertyChanged();
+        }
     }
 
     public string ResponsesSheet
@@ -129,6 +140,86 @@ public sealed class SettingsViewModel : ObservableObject
     public RelayCommand OpenTemplateCommand { get; }
     public RelayCommand OpenDataFolderCommand { get; }
     public RelayCommand ForgetTokenCommand { get; }
+    public AsyncRelayCommand CheckConnectionCommand { get; }
+
+    /// <summary>Результат перевірки зʼєднання з таблицею.</summary>
+    public string ConnectionReport
+    {
+        get => _connectionReport;
+        private set => Set(ref _connectionReport, value);
+    }
+
+    /// <summary>
+    /// Відкриває таблицю, підбирає назви аркушів і звіряє заголовки колонок
+    /// форми з полями моделі. Знайдені назви одразу записуються у налаштування,
+    /// щоб не доводилося вгадувати їх вручну.
+    /// </summary>
+    private async Task CheckConnectionAsync()
+    {
+        ConnectionReport = "Перевірка…";
+
+        try
+        {
+            var source = new GoogleSheetsResponseSource(_services.Authenticator, S);
+            var diagnosis = await source.DiagnoseAsync();
+
+            var text = new StringBuilder();
+            text.AppendLine("Аркуші у таблиці: " + string.Join(", ", diagnosis.SheetTitles));
+            text.AppendLine();
+
+            if (diagnosis.ResponsesSheet is null)
+            {
+                text.AppendLine("Аркуш із відповідями форми не знайдено.");
+                text.AppendLine("Вкажіть його назву вручну у полі «Аркуш відповідей».");
+                ConnectionReport = text.ToString();
+                _report("Перевірка: аркуш відповідей не знайдено.");
+                return;
+            }
+
+            // Підібрані назви одразу застосовуємо, щоб синхронізація запрацювала.
+            ResponsesSheet = diagnosis.ResponsesSheet;
+            if (diagnosis.DirectoriesSheet is not null) DirectoriesSheet = diagnosis.DirectoriesSheet;
+            if (diagnosis.PeopleSheet is not null) PeopleSheet = diagnosis.PeopleSheet;
+
+            text.AppendLine($"Відповіді : «{diagnosis.ResponsesSheet}», рядків — {diagnosis.ResponseRows}");
+            text.AppendLine($"Довідники : {diagnosis.DirectoriesSheet ?? "не знайдено"}");
+            text.AppendLine($"Люди      : {diagnosis.PeopleSheet ?? "не знайдено"}");
+            text.AppendLine();
+
+            text.AppendLine("Розпізнані колонки форми:");
+            foreach (var field in diagnosis.MatchedFields)
+                text.AppendLine("  • " + field);
+
+            if (diagnosis.MissingFields.Count > 0)
+            {
+                text.AppendLine();
+                text.AppendLine("НЕ знайдено: " + string.Join(", ", diagnosis.MissingFields));
+                text.AppendLine("Перейменуйте питання у формі так, щоб у заголовку було");
+                text.AppendLine("ключове слово (БпЛА, ціль, кількість, населений пункт, боєприпас).");
+            }
+            else
+            {
+                text.AppendLine();
+                text.AppendLine("Усі потрібні колонки знайдені. Можна синхронізувати.");
+            }
+
+            ConnectionReport = text.ToString();
+            _services.SettingsStore.Save(S);
+            _report(diagnosis.IsUsable
+                ? "Зʼєднання перевірено — таблиця придатна для синхронізації."
+                : "Зʼєднання встановлено, але не всі колонки розпізнані.");
+        }
+        catch (GoogleAccessException ex)
+        {
+            ConnectionReport = ex.Message;
+            _report("Google: не вдалося перевірити зʼєднання.");
+        }
+        catch (Exception ex)
+        {
+            ConnectionReport = "Помилка перевірки: " + ex.Message;
+            _report("Помилка перевірки зʼєднання.");
+        }
+    }
 
     private void Save()
     {

@@ -75,3 +75,5 @@ D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Wpf\obj\Debug\net8.0-windows\refin
 D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Wpf\obj\Debug\net8.0-windows\Рапорти.pdb
 D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Wpf\obj\Debug\net8.0-windows\Reports.Wpf.genruntimeconfig.cache
 D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Wpf\obj\Debug\net8.0-windows\ref\Рапорти.dll
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Wpf\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Wpf\obj\Debug\net8.0-windows\Рапорти_MarkupCompile.lref

@@ -31,8 +31,8 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
     {
         using var service = await CreateServiceAsync(ct);
 
-        var directories = await ReadRangeAsync(service, $"{_settings.DirectoriesSheet}!A1:K200", ct);
-        var people = await ReadRangeAsync(service, $"{_settings.PeopleSheet}!A1:D200", ct);
+        var directories = await ReadRangeAsync(service, SheetRange.Of(_settings.DirectoriesSheet, "A1:K200"), ct);
+        var people = await ReadRangeAsync(service, SheetRange.Of(_settings.PeopleSheet, "A1:D200"), ct);
 
         return new RawDirectories
         {
@@ -49,7 +49,7 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
     {
         using var service = await CreateServiceAsync(ct);
 
-        var rows = await ReadRangeAsync(service, $"{_settings.ResponsesSheet}!A1:Z5000", ct);
+        var rows = await ReadRangeAsync(service, SheetRange.Of(_settings.ResponsesSheet, "A1:Z5000"), ct);
         if (rows.Count < 2) return Array.Empty<RawResponseRow>();
 
         var map = ResponseColumnMap.FromHeader(rows[0]);
@@ -84,6 +84,194 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
         return result;
     }
 
+    /// <summary>
+    /// Назви всіх аркушів таблиці. Потрібні для перевірки зʼєднання:
+    /// Google називає аркуш відповідей «Відповіді форми 1», а не «Відповіді»,
+    /// і без цієї перевірки розбіжність виявляється лише порожньою синхронізацією.
+    /// </summary>
+    public async Task<IReadOnlyList<string>> ListSheetsAsync(CancellationToken ct = default)
+    {
+        using var service = await CreateServiceAsync(ct);
+
+        try
+        {
+            var meta = await service.Spreadsheets.Get(_settings.SpreadsheetId).ExecuteAsync(ct);
+            return meta.Sheets
+                       .Select(s => s.Properties?.Title ?? string.Empty)
+                       .Where(t => t.Length > 0)
+                       .ToList();
+        }
+        catch (Google.GoogleApiException ex)
+        {
+            throw new GoogleAccessException(DescribeApiError(ex, "відкрити таблицю"), ex);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException and not GoogleAccessException)
+        {
+            throw new GoogleAccessException(
+                "Таблицю не вдалося відкрити: " + ex.Message, ex);
+        }
+    }
+
+    /// <summary>
+    /// Підбирає назву аркуша зі списку за набором можливих початків назви.
+    /// Повертає null, якщо нічого схожого немає.
+    /// </summary>
+    public static string? MatchSheet(IEnumerable<string> titles, params string[] prefixes)
+    {
+        var list = titles.ToList();
+
+        foreach (var prefix in prefixes)
+        {
+            var exact = list.FirstOrDefault(t =>
+                string.Equals(t, prefix, StringComparison.CurrentCultureIgnoreCase));
+            if (exact is not null) return exact;
+        }
+
+        foreach (var prefix in prefixes)
+        {
+            var partial = list.FirstOrDefault(t =>
+                t.StartsWith(prefix, StringComparison.CurrentCultureIgnoreCase));
+            if (partial is not null) return partial;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Результат перевірки зʼєднання: що знайдено в таблиці і чого бракує.
+    /// </summary>
+    public sealed class Diagnosis
+    {
+        public required IReadOnlyList<string> SheetTitles { get; init; }
+        public string? ResponsesSheet { get; init; }
+        public string? DirectoriesSheet { get; init; }
+        public string? PeopleSheet { get; init; }
+        public int ResponseRows { get; init; }
+        public IReadOnlyList<string> MatchedFields { get; init; } = Array.Empty<string>();
+        public IReadOnlyList<string> MissingFields { get; init; } = Array.Empty<string>();
+
+        public bool IsUsable => ResponsesSheet is not null && MissingFields.Count == 0;
+    }
+
+    /// <summary>
+    /// Перевіряє зʼєднання: відкриває таблицю, підбирає аркуші за назвами
+    /// й зіставляє заголовки колонок форми з полями моделі.
+    /// </summary>
+    public async Task<Diagnosis> DiagnoseAsync(CancellationToken ct = default)
+    {
+        var titles = await ListSheetsAsync(ct);
+
+        var responses = MatchSheet(titles, _settings.ResponsesSheet, "Відповіді", "Form Responses");
+        var directories = MatchSheet(titles, _settings.DirectoriesSheet, "Довідники", "Довідник");
+        var people = MatchSheet(titles, _settings.PeopleSheet, "Люди");
+
+        if (responses is null)
+            return new Diagnosis { SheetTitles = titles };
+
+        using var service = await CreateServiceAsync(ct);
+        var rows = await ReadRangeAsync(service, SheetRange.Of(responses, "A1:Z5000"), ct);
+
+        if (rows.Count == 0)
+            return new Diagnosis
+            {
+                SheetTitles = titles,
+                ResponsesSheet = responses,
+                DirectoriesSheet = directories,
+                PeopleSheet = people,
+                MissingFields = new[] { "аркуш відповідей порожній" }
+            };
+
+        var map = ResponseColumnMap.FromHeader(rows[0]);
+
+        var matched = new List<string>();
+        void Note(string name, int column)
+        {
+            if (column >= 0) matched.Add($"{name} → колонка «{rows[0][column]}»");
+        }
+
+        Note("дата", map.Date);
+        Note("оператор", map.Email);
+        Note("населений пункт", map.Settlement);
+        Note("тип БпЛА", map.UavType);
+        Note("тип цілі", map.TargetType);
+        Note("кількість", map.UavCount);
+        Note("статус", map.Status);
+        foreach (var column in map.Munitions)
+            matched.Add($"боєприпас → колонка «{rows[0][column]}»");
+
+        return new Diagnosis
+        {
+            SheetTitles = titles,
+            ResponsesSheet = responses,
+            DirectoriesSheet = directories,
+            PeopleSheet = people,
+            ResponseRows = Math.Max(0, rows.Count - 1),
+            MatchedFields = matched,
+            MissingFields = map.MissingFields()
+        };
+    }
+
+    /// <summary>
+    /// Витягує ідентифікатор із того, що вставив користувач. Найчастіша помилка —
+    /// скопійована адреса цілком; тоді Google повертає 404, і причина неочевидна.
+    /// </summary>
+    public static string NormalizeSpreadsheetId(string raw)
+    {
+        var value = (raw ?? string.Empty).Trim();
+        if (value.Length == 0) return value;
+
+        var match = System.Text.RegularExpressions.Regex.Match(
+            value, @"/spreadsheets/d/([a-zA-Z0-9-_]+)");
+        if (match.Success) return match.Groups[1].Value;
+
+        // Просто адреса без /d/ — віддаємо як є, хай Google скаже своє.
+        return value;
+    }
+
+    /// <summary>
+    /// Перекладає відповідь Google API у пораду, що саме робити.
+    /// Код відповіді тут головний: 403 і 404 лікуються по-різному.
+    /// </summary>
+    private string DescribeApiError(Google.GoogleApiException ex, string action)
+    {
+        var detail = ex.Error?.Message ?? ex.Message;
+        var id = _settings.SpreadsheetId;
+        var br = Environment.NewLine + Environment.NewLine;
+
+        var advice = (int)ex.HttpStatusCode switch
+        {
+            404 =>
+                "Таблицю з таким ідентифікатором не знайдено." + br +
+                $"Зараз указано: «{id}»" + br +
+                "Потрібен лише ідентифікатор із адреси, а не вся адреса:" + Environment.NewLine +
+                "docs.google.com/spreadsheets/d/[ЦЕЙ_РЯДОК]/edit",
+
+            403 when detail.Contains("has not been used in project", StringComparison.OrdinalIgnoreCase)
+                  || detail.Contains("is disabled", StringComparison.OrdinalIgnoreCase) =>
+                "У проєкті Google Cloud не увімкнено Google Sheets API." + br +
+                "APIs & Services → Library → Google Sheets API → Enable." + Environment.NewLine +
+                "Після ввімкнення зачекайте одну-дві хвилини.",
+
+            403 =>
+                "Доступ заборонено: акаунт, яким ви ввійшли, не має доступу до цієї таблиці." + br +
+                "Перевірте, що авторизувалися тим самим акаунтом, якому належить таблиця, " +
+                "або відкрийте до неї доступ. Змінити акаунт: «Забути токен» і повторити.",
+
+            401 =>
+                "Термін дії дозволу минув або його відкликано." + br +
+                "Натисніть «Забути токен» і повторіть перевірку.",
+
+            400 =>
+                "Google не зрозумів запит — найчастіше через неправильну назву аркуша " +
+                "або ідентифікатор.",
+
+            _ => "Google повернув помилку."
+        };
+
+        return $"Не вдалося {action}." + br + advice + br +
+               $"Відповідь Google ({(int)ex.HttpStatusCode}): {detail}";
+    }
+
     private async Task<SheetsService> CreateServiceAsync(CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(_settings.SpreadsheetId))
@@ -105,11 +293,15 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
 
             return response.Values ?? new List<IList<object>>();
         }
+        catch (Google.GoogleApiException ex)
+        {
+            throw new GoogleAccessException(
+                DescribeApiError(ex, $"прочитати діапазон «{range}»"), ex);
+        }
         catch (Exception ex) when (ex is not OperationCanceledException and not GoogleAccessException)
         {
             throw new GoogleAccessException(
-                $"Не вдалося прочитати діапазон «{range}». Перевірте ідентифікатор таблиці, " +
-                "назви аркушів у налаштуваннях і доступ вашого акаунта до документа.", ex);
+                $"Не вдалося прочитати діапазон «{range}»: {ex.Message}", ex);
         }
     }
 

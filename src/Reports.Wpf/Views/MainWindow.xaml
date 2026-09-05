@@ -12,6 +12,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_Файл">
                 <MenuItem Header="Синхронізувати дані" Command="{Binding SyncCommand}" />
+                <MenuItem Header="Вивантажити в таблицю" Command="{Binding Missions.PublishCommand}" />
                 <MenuItem Header="Оновити все" Command="{Binding ReloadAllCommand}" />
                 <Separator />
                 <MenuItem Header="Тека з даними"
@@ -157,6 +158,8 @@
                 <DockPanel Margin="10" DataContext="{Binding Missions}">
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
                         <Button Content="Синхронізувати" Command="{Binding SyncCommand}" />
+                        <Button Content="Вивантажити в таблицю" MinWidth="170"
+                                Command="{Binding PublishCommand}" />
                         <Button Content="Оновити" Command="{Binding ReloadCommand}" />
                         <Button Content="Скасувати / повернути" MinWidth="170"
                                 Command="{Binding CancelCommand}" />
@@ -375,9 +378,22 @@
 
                                     <TextBlock Text="{Binding CredentialsStatus}"
                                                Style="{StaticResource Hint}" Margin="0,10,0,0" />
-                                    <Button Content="Забути токен Google" HorizontalAlignment="Left"
-                                            MinWidth="180" Margin="0,4,0,0"
-                                            Command="{Binding ForgetTokenCommand}" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                        <Button Content="Перевірити зʼєднання" MinWidth="170"
+                                                Command="{Binding CheckConnectionCommand}" />
+                                        <Button Content="Забути токен" MinWidth="130"
+                                                Command="{Binding ForgetTokenCommand}" />
+                                    </StackPanel>
+                                    <TextBox Text="{Binding ConnectionReport, Mode=OneWay}"
+                                             IsReadOnly="True" Margin="0,8,0,0"
+                                             MinHeight="120" MaxHeight="220"
+                                             TextWrapping="NoWrap"
+                                             FontFamily="Consolas" FontSize="12"
+                                             Background="#FAFAFA"
+                                             VerticalScrollBarVisibility="Auto"
+                                             HorizontalScrollBarVisibility="Auto"
+                                             Visibility="{Binding ConnectionReport,
+                                                          Converter={StaticResource EmptyToCollapsed}}" />
                                 </StackPanel>
                             </GroupBox>
 

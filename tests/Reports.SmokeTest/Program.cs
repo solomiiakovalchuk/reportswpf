@@ -130,7 +130,38 @@ try
         Check("повідомлення про відсутність записів", ex.Message.Contains("записів немає"), ex.Message);
     }
 
-    Console.WriteLine("\n9. Пресети періодів");
+    Console.WriteLine("\n9. Складання діапазонів A1 для запису в таблицю");
+    Check("індекс 0 дає колонку A", SheetRange.Column(0) == "A", SheetRange.Column(0));
+    Check("індекс 9 дає колонку J", SheetRange.Column(9) == "J", SheetRange.Column(9));
+    Check("індекс 25 дає колонку Z", SheetRange.Column(25) == "Z", SheetRange.Column(25));
+    Check("індекс 26 дає колонку AA", SheetRange.Column(26) == "AA", SheetRange.Column(26));
+
+    // Типова назва аркуша від Google — з пробілами; без лапок діапазон не розбереться.
+    var quoted = SheetRange.Of("Відповіді форми 1", "A1:Z10");
+    Check("назва аркуша з пробілами взята в лапки",
+          quoted == "'Відповіді форми 1'!A1:Z10", quoted);
+
+    var cellRange = SheetRange.Cell("Люди", 3, 7);
+    Check("клітинка складається правильно", cellRange == "'Люди'!D7", cellRange);
+
+    Console.WriteLine("\n10. Збір даних для вивантаження");
+    var publish = new PublishService(references, people, missions);
+    var payload = await publish.CollectAsync();
+    var allMissions = await missions.GetAllAsync();
+
+    Check("довідник БпЛА потрапив у вивантаження", payload.Uav.Count > 0);
+    Check("люди потрапили у вивантаження", payload.People.Count > 0);
+    Check("статуси зібрані для всіх подач", payload.Statuses.Count == allMissions.Count);
+    Check("у блоці місць права колонка — область",
+          payload.Settlements.Any(x => x.Right == "Харківська"),
+          string.Join("; ", payload.Settlements.Select(x => x.Left + "/" + x.Right)));
+
+    var cancelledStatus = payload.Statuses.FirstOrDefault(x => x.Marker == "СКАСОВАНО");
+    Check("скасований запис має маркер СКАСОВАНО", cancelledStatus.SourceRowKey is not null);
+    Check("ключ джерела містить номер рядка для адресації клітинки",
+          cancelledStatus.SourceRowKey?.Contains('|') == true, cancelledStatus.SourceRowKey);
+
+    Console.WriteLine("\n11. Пресети періодів");
     var monday = new DateTime(2026, 9, 2); // середа
     foreach (var preset in PeriodPreset.All)
     {
