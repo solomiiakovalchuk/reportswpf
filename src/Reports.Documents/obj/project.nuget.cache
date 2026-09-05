@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "DtXppB0gwuE=",
+  "success": true,
+  "projectFilePath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Documents\\Reports.Documents.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\vygol\\.nuget\\packages\\documentformat.openxml\\3.1.0\\documentformat.openxml.3.1.0.nupkg.sha512",
+    "C:\\Users\\vygol\\.nuget\\packages\\documentformat.openxml.framework\\3.1.0\\documentformat.openxml.framework.3.1.0.nupkg.sha512",
+    "C:\\Users\\vygol\\.nuget\\packages\\system.io.packaging\\8.0.0\\system.io.packaging.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

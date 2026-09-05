@@ -1,0 +1,417 @@
+<Window x:Class="Reports.Wpf.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Рапорти про використання БпЛА та боєприпасів"
+        Height="720" Width="1180"
+        WindowStartupLocation="CenterScreen"
+        FontSize="13">
+
+    <DockPanel>
+
+        <!-- Головне меню -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Файл">
+                <MenuItem Header="Синхронізувати дані" Command="{Binding SyncCommand}" />
+                <MenuItem Header="Оновити все" Command="{Binding ReloadAllCommand}" />
+                <Separator />
+                <MenuItem Header="Тека з даними"
+                          Command="{Binding Settings.OpenDataFolderCommand}" />
+                <MenuItem Header="Тека з рапортами"
+                          Command="{Binding Report.OpenFolderCommand}" />
+                <Separator />
+                <MenuItem Header="Вихід" Command="{Binding ExitCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Шаблон">
+                <MenuItem Header="Відкрити шаблон рапорту"
+                          Command="{Binding Settings.OpenTemplateCommand}" />
+                <MenuItem Header="Перебудувати за налаштуваннями"
+                          Command="{Binding Settings.RebuildTemplateCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Довідка">
+                <MenuItem Header="Про програму" Command="{Binding AboutCommand}" />
+            </MenuItem>
+        </Menu>
+
+        <!-- Панель швидких дій -->
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <Button Content="Синхронізувати" Command="{Binding SyncCommand}" />
+                <Button Content="Оновити" Command="{Binding ReloadAllCommand}" />
+                <Separator />
+                <Button Content="Переглянути текст" Command="{Binding Report.PreviewCommand}" />
+                <Button Content="Створити рапорт" Command="{Binding Report.GenerateCommand}" />
+            </ToolBar>
+        </ToolBarTray>
+
+        <!-- Рядок стану -->
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding Status}" TextTrimming="CharacterEllipsis" />
+            </StatusBarItem>
+        </StatusBar>
+
+        <TabControl Margin="8" SelectedIndex="{Binding SelectedTab}">
+
+            <!-- ============ Формування рапорту ============ -->
+            <TabItem Header="Формування рапорту">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="420" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto"
+                                  Margin="0,0,12,0">
+                        <StackPanel DataContext="{Binding Report}">
+
+                            <GroupBox Header="Період">
+                                <StackPanel>
+                                    <ItemsControl ItemsSource="{Binding Presets}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Content="{Binding Title}"
+                                                        MinWidth="0" Padding="10,4"
+                                                        Margin="0,0,6,6"
+                                                        CommandParameter="{Binding}"
+                                                        Command="{Binding DataContext.ApplyPresetCommand,
+                                                                  RelativeSource={RelativeSource AncestorType=ItemsControl}}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                    <Grid Margin="0,6,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="12" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="З дати" Style="{StaticResource FieldLabel}" />
+                                            <DatePicker SelectedDate="{Binding From}" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock Text="По дату" Style="{StaticResource FieldLabel}" />
+                                            <DatePicker SelectedDate="{Binding To}" />
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </GroupBox>
+
+                            <GroupBox Header="Підпис і фільтри">
+                                <StackPanel>
+                                    <TextBlock Text="Від кого рапорт (підписант)"
+                                               Style="{StaticResource FieldLabel}" />
+                                    <ComboBox ItemsSource="{Binding Signers}"
+                                              SelectedItem="{Binding Signer}" />
+                                    <TextBlock Style="{StaticResource Hint}"
+                                               Text="Визначає посаду, звання та ПІБ у підписі. Береться з довідника «Люди»." />
+
+                                    <TextBlock Text="Оператор — фільтр даних"
+                                               Style="{StaticResource FieldLabel}" />
+                                    <ComboBox ItemsSource="{Binding Operators}"
+                                              SelectedItem="{Binding OperatorFilter}" />
+
+                                    <TextBlock Text="Населений пункт — фільтр даних"
+                                               Style="{StaticResource FieldLabel}" />
+                                    <ComboBox ItemsSource="{Binding Settlements}"
+                                              SelectedItem="{Binding SettlementFilter}" />
+
+                                    <TextBlock Text="Бойовий наказ" Style="{StaticResource FieldLabel}" />
+                                    <TextBox Text="{Binding Order, UpdateSourceTrigger=PropertyChanged}"
+                                             TextWrapping="Wrap" AcceptsReturn="True" MinHeight="46" />
+                                </StackPanel>
+                            </GroupBox>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <Button Content="Переглянути текст" Command="{Binding PreviewCommand}" />
+                                <Button Content="Створити документ" Command="{Binding GenerateCommand}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                <Button Content="Відкрити файл" Command="{Binding OpenFileCommand}" />
+                                <Button Content="Тека рапортів" Command="{Binding OpenFolderCommand}" />
+                            </StackPanel>
+
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <GroupBox Grid.Column="1" Header="Текст рапорту (попередній перегляд)">
+                        <TextBox Text="{Binding Report.PreviewText, Mode=OneWay}"
+                                 IsReadOnly="True"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto"
+                                 FontFamily="Times New Roman"
+                                 FontSize="15"
+                                 Padding="10"
+                                 Background="#FAFAFA" />
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+
+            <!-- ============ Відповіді ============ -->
+            <TabItem Header="Відповіді">
+                <DockPanel Margin="10" DataContext="{Binding Missions}">
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+                        <Button Content="Синхронізувати" Command="{Binding SyncCommand}" />
+                        <Button Content="Оновити" Command="{Binding ReloadCommand}" />
+                        <Button Content="Скасувати / повернути" MinWidth="170"
+                                Command="{Binding CancelCommand}" />
+                    </StackPanel>
+
+                    <TextBlock DockPanel.Dock="Bottom" Margin="0,8,0,0"
+                               TextWrapping="Wrap" Foreground="#444"
+                               Text="{Binding Summary}" />
+
+                    <DataGrid ItemsSource="{Binding Rows}"
+                              SelectedItem="{Binding Selected}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"
+                              HeadersVisibility="Column"
+                              GridLinesVisibility="Horizontal">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsCancelled}" Value="True">
+                                        <Setter Property="Foreground" Value="#999" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Дата" Width="90"
+                                                Binding="{Binding Date, StringFormat=dd.MM.yyyy}" />
+                            <DataGridTextColumn Header="Оператор" Width="180"
+                                                Binding="{Binding Operator}" />
+                            <DataGridTextColumn Header="Нас. пункт" Width="110"
+                                                Binding="{Binding Settlement}" />
+                            <DataGridTextColumn Header="БпЛА" Width="110" Binding="{Binding Uav}" />
+                            <DataGridTextColumn Header="К-сть" Width="60" Binding="{Binding UavCount}" />
+                            <DataGridTextColumn Header="Ціль" Width="150" Binding="{Binding Targets}" />
+                            <DataGridTextColumn Header="Боєприпаси" Width="*" Binding="{Binding Munitions}" />
+                            <DataGridTextColumn Header="Статус" Width="120" Binding="{Binding Status}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+
+            <!-- ============ Довідники ============ -->
+            <TabItem Header="Довідники">
+                <Grid Margin="10" DataContext="{Binding Directories}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="260" />
+                    </Grid.RowDefinitions>
+
+                    <TabControl Grid.Row="0" ItemsSource="{Binding Sections}">
+                        <TabControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Title}" />
+                            </DataTemplate>
+                        </TabControl.ItemTemplate>
+                        <TabControl.ContentTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="8">
+                                    <TextBlock DockPanel.Dock="Top" Text="{Binding Hint}"
+                                               Style="{StaticResource Hint}" />
+                                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal"
+                                                Margin="0,0,0,8">
+                                        <Button Content="Додати" Command="{Binding AddCommand}" />
+                                        <Button Content="Зберегти" Command="{Binding SaveCommand}" />
+                                        <Button Content="Видалити" Command="{Binding DeleteCommand}" />
+                                    </StackPanel>
+                                    <DataGrid ItemsSource="{Binding Rows}"
+                                              SelectedItem="{Binding Selected}"
+                                              AutoGenerateColumns="False"
+                                              CanUserAddRows="False"
+                                              HeadersVisibility="Column">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Width="260"
+                                                Header="{Binding DataContext.LeftHeader,
+                                                         RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                Binding="{Binding Left, UpdateSourceTrigger=LostFocus}" />
+                                            <DataGridTextColumn Width="*"
+                                                Header="{Binding DataContext.RightHeader,
+                                                         RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                Binding="{Binding Right, UpdateSourceTrigger=LostFocus}" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </DockPanel>
+                            </DataTemplate>
+                        </TabControl.ContentTemplate>
+                    </TabControl>
+
+                    <TextBlock Grid.Row="1" Text="Люди (підписанти та оператори)"
+                               Style="{StaticResource FieldLabel}" />
+
+                    <DockPanel Grid.Row="2">
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,6">
+                            <Button Content="Додати" Command="{Binding AddPersonCommand}" />
+                            <Button Content="Зберегти" Command="{Binding SavePeopleCommand}" />
+                            <Button Content="Видалити" Command="{Binding DeletePersonCommand}" />
+                        </StackPanel>
+                        <DataGrid ItemsSource="{Binding People}"
+                                  SelectedItem="{Binding SelectedPerson}"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  HeadersVisibility="Column">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Email" Width="220"
+                                                    Binding="{Binding Email, UpdateSourceTrigger=LostFocus}" />
+                                <DataGridTextColumn Header="ПІБ" Width="220"
+                                                    Binding="{Binding FullName, UpdateSourceTrigger=LostFocus}" />
+                                <DataGridTextColumn Header="Звання" Width="150"
+                                                    Binding="{Binding Rank, UpdateSourceTrigger=LostFocus}" />
+                                <DataGridTextColumn Header="Посада" Width="*"
+                                                    Binding="{Binding Position, UpdateSourceTrigger=LostFocus}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- ============ Журнал ============ -->
+            <TabItem Header="Журнал">
+                <DockPanel Margin="10" DataContext="{Binding Journal}">
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+                        <Button Content="Оновити" Command="{Binding ReloadCommand}" />
+                        <Button Content="Відкрити файл" Command="{Binding OpenCommand}" />
+                    </StackPanel>
+                    <DataGrid ItemsSource="{Binding Entries}"
+                              SelectedItem="{Binding Selected}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"
+                              HeadersVisibility="Column">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Сформовано" Width="140"
+                                                Binding="{Binding GeneratedAt, StringFormat='dd.MM.yyyy HH:mm'}" />
+                            <DataGridTextColumn Header="Період з" Width="100"
+                                                Binding="{Binding PeriodFrom, StringFormat=dd.MM.yyyy}" />
+                            <DataGridTextColumn Header="по" Width="100"
+                                                Binding="{Binding PeriodTo, StringFormat=dd.MM.yyyy}" />
+                            <DataGridTextColumn Header="Підписант" Width="160"
+                                                Binding="{Binding SignerName}" />
+                            <DataGridTextColumn Header="Записів" Width="70"
+                                                Binding="{Binding MissionCount}" />
+                            <DataGridTextColumn Header="Файл" Width="*" Binding="{Binding FilePath}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+
+            <!-- ============ Налаштування ============ -->
+            <TabItem Header="Налаштування">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="10" DataContext="{Binding Settings}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <GroupBox Header="Реквізити документа">
+                                <StackPanel>
+                                    <TextBlock Text="Гриф" Style="{StaticResource FieldLabel}" />
+                                    <TextBox Text="{Binding Classification}" />
+
+                                    <TextBlock Text="Адресат" Style="{StaticResource FieldLabel}" />
+                                    <TextBox Text="{Binding Addressee}" AcceptsReturn="True"
+                                             TextWrapping="Wrap" MinHeight="46" />
+
+                                    <TextBlock Text="Резолюція" Style="{StaticResource FieldLabel}" />
+                                    <TextBox Text="{Binding Resolution}" AcceptsReturn="True"
+                                             TextWrapping="Wrap" MinHeight="46" />
+
+                                    <TextBlock Text="Звання під резолюцією" Style="{StaticResource FieldLabel}" />
+                                    <TextBox Text="{Binding ResolutionRank}" />
+
+                                    <TextBlock Text="ПІБ під резолюцією" Style="{StaticResource FieldLabel}" />
+                                    <TextBox Text="{Binding ResolutionName}" />
+
+                                    <TextBlock Text="Підрозділ (у тексті рапорту)"
+                                               Style="{StaticResource FieldLabel}" />
+                                    <TextBox Text="{Binding SubunitText}" AcceptsReturn="True"
+                                             TextWrapping="Wrap" MinHeight="46" />
+
+                                    <TextBlock Text="Бойовий наказ за замовчуванням"
+                                               Style="{StaticResource FieldLabel}" />
+                                    <TextBox Text="{Binding OrderDefault}" />
+
+                                    <TextBlock Style="{StaticResource Hint}" Margin="0,10,0,0"
+                                               Text="Гриф, адресат і резолюція вписані у шаблон .docx. Після їх зміни натисніть «Перебудувати шаблон»." />
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <GroupBox Header="Джерело даних">
+                                <StackPanel>
+                                    <CheckBox Content="Демонстраційні дані (без Google та інтернету)"
+                                              IsChecked="{Binding UseDemoData}" Margin="0,4,0,6" />
+                                    <TextBlock Text="{Binding SourceDescription}"
+                                               Style="{StaticResource Hint}" />
+
+                                    <TextBlock Text="Ідентифікатор Google-таблиці"
+                                               Style="{StaticResource FieldLabel}" />
+                                    <TextBox Text="{Binding SpreadsheetId}" />
+                                    <TextBlock Style="{StaticResource Hint}"
+                                               Text="З адреси: docs.google.com/spreadsheets/d/ІДЕНТИФІКАТОР/edit" />
+
+                                    <TextBlock Text="Аркуш відповідей" Style="{StaticResource FieldLabel}" />
+                                    <TextBox Text="{Binding ResponsesSheet}" />
+
+                                    <TextBlock Text="Аркуш довідників" Style="{StaticResource FieldLabel}" />
+                                    <TextBox Text="{Binding DirectoriesSheet}" />
+
+                                    <TextBlock Text="Аркуш людей" Style="{StaticResource FieldLabel}" />
+                                    <TextBox Text="{Binding PeopleSheet}" />
+
+                                    <TextBlock Text="{Binding CredentialsStatus}"
+                                               Style="{StaticResource Hint}" Margin="0,10,0,0" />
+                                    <Button Content="Забути токен Google" HorizontalAlignment="Left"
+                                            MinWidth="180" Margin="0,4,0,0"
+                                            Command="{Binding ForgetTokenCommand}" />
+                                </StackPanel>
+                            </GroupBox>
+
+                            <GroupBox Header="Файли">
+                                <StackPanel>
+                                    <TextBlock Text="Тека для рапортів" Style="{StaticResource FieldLabel}" />
+                                    <TextBox Text="{Binding OutputFolder}" />
+
+                                    <TextBlock Text="Шаблон" Style="{StaticResource FieldLabel}" />
+                                    <TextBlock Text="{Binding TemplatePath}" Style="{StaticResource Hint}" />
+
+                                    <TextBlock Text="Тека даних" Style="{StaticResource FieldLabel}" />
+                                    <TextBlock Text="{Binding DataFolder}" Style="{StaticResource Hint}" />
+
+                                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                        <Button Content="Відкрити шаблон"
+                                                Command="{Binding OpenTemplateCommand}" />
+                                        <Button Content="Тека даних"
+                                                Command="{Binding OpenDataFolderCommand}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Зберегти налаштування" MinWidth="180"
+                                        Command="{Binding SaveCommand}" />
+                                <Button Content="Перебудувати шаблон" MinWidth="180"
+                                        Command="{Binding RebuildTemplateCommand}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+        </TabControl>
+    </DockPanel>
+</Window>

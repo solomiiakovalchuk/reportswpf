@@ -1,0 +1,15 @@
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\bin\Debug\net8.0\Reports.Integration.deps.json
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\bin\Debug\net8.0\Reports.Integration.dll
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\bin\Debug\net8.0\Reports.Integration.pdb
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\bin\Debug\net8.0\Reports.Core.dll
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\bin\Debug\net8.0\Reports.Core.pdb
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\Reports.Integration.csproj.AssemblyReference.cache
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\Reports.Integration.GeneratedMSBuildEditorConfig.editorconfig
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\Reports.Integration.AssemblyInfoInputs.cache
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\Reports.Integration.AssemblyInfo.cs
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\Reports.Integration.csproj.CoreCompileInputs.cache
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\Reports..4AD8CAFF.Up2Date
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\Reports.Integration.dll
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\refint\Reports.Integration.dll
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\Reports.Integration.pdb
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\ref\Reports.Integration.dll

@@ -1,0 +1,401 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\tests\\Reports.SmokeTest\\Reports.SmokeTest.csproj": {}
+  },
+  "projects": {
+    "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Core\\Reports.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Core\\Reports.Core.csproj",
+        "projectName": "Reports.Core",
+        "projectPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Core\\Reports.Core.csproj",
+        "packagesPath": "C:\\Users\\vygol\\.nuget\\packages\\",
+        "outputPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Core\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\DevExpress 23.2\\Components\\Offline Packages",
+          "C:\\Program Files\\DevExpress 25.2\\Components\\Offline Packages",
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\NuGet.Config",
+          "C:\\Users\\vygol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 25.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Data\\Reports.Data.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Data\\Reports.Data.csproj",
+        "projectName": "Reports.Data",
+        "projectPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Data\\Reports.Data.csproj",
+        "packagesPath": "C:\\Users\\vygol\\.nuget\\packages\\",
+        "outputPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Data\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\DevExpress 23.2\\Components\\Offline Packages",
+          "C:\\Program Files\\DevExpress 25.2\\Components\\Offline Packages",
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\NuGet.Config",
+          "C:\\Users\\vygol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 25.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Core\\Reports.Core.csproj": {
+                "projectPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Core\\Reports.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[8.0.10, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Documents\\Reports.Documents.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Documents\\Reports.Documents.csproj",
+        "projectName": "Reports.Documents",
+        "projectPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Documents\\Reports.Documents.csproj",
+        "packagesPath": "C:\\Users\\vygol\\.nuget\\packages\\",
+        "outputPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Documents\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\DevExpress 23.2\\Components\\Offline Packages",
+          "C:\\Program Files\\DevExpress 25.2\\Components\\Offline Packages",
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\NuGet.Config",
+          "C:\\Users\\vygol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 25.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Core\\Reports.Core.csproj": {
+                "projectPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Core\\Reports.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "DocumentFormat.OpenXml": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Integration\\Reports.Integration.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Integration\\Reports.Integration.csproj",
+        "projectName": "Reports.Integration",
+        "projectPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Integration\\Reports.Integration.csproj",
+        "packagesPath": "C:\\Users\\vygol\\.nuget\\packages\\",
+        "outputPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Integration\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\DevExpress 23.2\\Components\\Offline Packages",
+          "C:\\Program Files\\DevExpress 25.2\\Components\\Offline Packages",
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\NuGet.Config",
+          "C:\\Users\\vygol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 25.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Core\\Reports.Core.csproj": {
+                "projectPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Core\\Reports.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Google.Apis.Sheets.v4": {
+              "target": "Package",
+              "version": "[1.68.0.3561, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\tests\\Reports.SmokeTest\\Reports.SmokeTest.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\tests\\Reports.SmokeTest\\Reports.SmokeTest.csproj",
+        "projectName": "Reports.SmokeTest",
+        "projectPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\tests\\Reports.SmokeTest\\Reports.SmokeTest.csproj",
+        "packagesPath": "C:\\Users\\vygol\\.nuget\\packages\\",
+        "outputPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\tests\\Reports.SmokeTest\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\DevExpress 23.2\\Components\\Offline Packages",
+          "C:\\Program Files\\DevExpress 25.2\\Components\\Offline Packages",
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\NuGet.Config",
+          "C:\\Users\\vygol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 25.2.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Core\\Reports.Core.csproj": {
+                "projectPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Core\\Reports.Core.csproj"
+              },
+              "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Data\\Reports.Data.csproj": {
+                "projectPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Data\\Reports.Data.csproj"
+              },
+              "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Documents\\Reports.Documents.csproj": {
+                "projectPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Documents\\Reports.Documents.csproj"
+              },
+              "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Integration\\Reports.Integration.csproj": {
+                "projectPath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Integration\\Reports.Integration.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

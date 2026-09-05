@@ -1,0 +1,14 @@
+D:\ХНУ\3kurs\кпз\ReportsWpf\lab8\TranslatorTables\bin\Debug\net8.0\TranslatorTables.exe
+D:\ХНУ\3kurs\кпз\ReportsWpf\lab8\TranslatorTables\bin\Debug\net8.0\TranslatorTables.deps.json
+D:\ХНУ\3kurs\кпз\ReportsWpf\lab8\TranslatorTables\bin\Debug\net8.0\TranslatorTables.runtimeconfig.json
+D:\ХНУ\3kurs\кпз\ReportsWpf\lab8\TranslatorTables\bin\Debug\net8.0\TranslatorTables.dll
+D:\ХНУ\3kurs\кпз\ReportsWpf\lab8\TranslatorTables\bin\Debug\net8.0\TranslatorTables.pdb
+D:\ХНУ\3kurs\кпз\ReportsWpf\lab8\TranslatorTables\obj\Debug\net8.0\TranslatorTables.GeneratedMSBuildEditorConfig.editorconfig
+D:\ХНУ\3kurs\кпз\ReportsWpf\lab8\TranslatorTables\obj\Debug\net8.0\TranslatorTables.AssemblyInfoInputs.cache
+D:\ХНУ\3kurs\кпз\ReportsWpf\lab8\TranslatorTables\obj\Debug\net8.0\TranslatorTables.AssemblyInfo.cs
+D:\ХНУ\3kurs\кпз\ReportsWpf\lab8\TranslatorTables\obj\Debug\net8.0\TranslatorTables.csproj.CoreCompileInputs.cache
+D:\ХНУ\3kurs\кпз\ReportsWpf\lab8\TranslatorTables\obj\Debug\net8.0\TranslatorTables.dll
+D:\ХНУ\3kurs\кпз\ReportsWpf\lab8\TranslatorTables\obj\Debug\net8.0\refint\TranslatorTables.dll
+D:\ХНУ\3kurs\кпз\ReportsWpf\lab8\TranslatorTables\obj\Debug\net8.0\TranslatorTables.pdb
+D:\ХНУ\3kurs\кпз\ReportsWpf\lab8\TranslatorTables\obj\Debug\net8.0\TranslatorTables.genruntimeconfig.cache
+D:\ХНУ\3kurs\кпз\ReportsWpf\lab8\TranslatorTables\obj\Debug\net8.0\ref\TranslatorTables.dll

@@ -1,0 +1,15 @@
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\bin\Debug\net8.0\Reports.Documents.deps.json
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\bin\Debug\net8.0\Reports.Documents.dll
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\bin\Debug\net8.0\Reports.Documents.pdb
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\bin\Debug\net8.0\Reports.Core.dll
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\bin\Debug\net8.0\Reports.Core.pdb
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\Reports.Documents.csproj.AssemblyReference.cache
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\Reports.Documents.GeneratedMSBuildEditorConfig.editorconfig
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\Reports.Documents.AssemblyInfoInputs.cache
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\Reports.Documents.AssemblyInfo.cs
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\Reports.Documents.csproj.CoreCompileInputs.cache
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\Reports..5D52BB4A.Up2Date
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\Reports.Documents.dll
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\refint\Reports.Documents.dll
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\Reports.Documents.pdb
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\ref\Reports.Documents.dll
