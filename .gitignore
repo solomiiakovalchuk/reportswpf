@@ -13,3 +13,5 @@ obj/
 Thumbs.db
 
 *.log
+# Word lock files
+~$*
