@@ -1,0 +1,50 @@
+name: SonarCloud Analysis
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  sonarcloud:
+    name: SonarCloud
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # full history for blame/coverage
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.x
+
+      - name: Install SonarScanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Begin analysis
+        run: |
+          dotnet sonarscanner begin `
+            /k:"${{ secrets.SONAR_PROJECT_KEY }}" `
+            /o:"${{ secrets.SONAR_ORGANIZATION }}" `
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
+            /d:sonar.host.url="https://sonarcloud.io" `
+            /d:sonar.exclusions="**/obj/**,**/bin/**,**/*.Designer.cs"
+        shell: pwsh
+
+      - name: Build
+        run: dotnet build src/Reports.Desktop/Reports.Desktop.csproj --no-incremental
+        shell: pwsh
+
+      - name: End analysis
+        run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+        shell: pwsh
