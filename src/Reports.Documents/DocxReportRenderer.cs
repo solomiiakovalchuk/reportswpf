@@ -6,10 +6,6 @@ using Reports.Core.Services;
 
 namespace Reports.Documents;
 
-/// <summary>
-/// Формує рапорт у форматі Word: копіює шаблон, підставляє значення тегів,
-/// зберігає результат. Word на машині не потрібен — файл збирається бібліотекою.
-/// </summary>
 public sealed class DocxReportRenderer : IReportRenderer
 {
     private readonly AppSettings _settings;
@@ -23,7 +19,6 @@ public sealed class DocxReportRenderer : IReportRenderer
 
     public ReportFormat Format => ReportFormat.Word;
 
-    /// <summary>Шлях до шаблону, за яким формуються документи.</summary>
     public string TemplatePath => _templatePath;
 
     public Task<string> RenderAsync(ReportContent content, string outputPath, CancellationToken ct = default)
@@ -59,21 +54,18 @@ public sealed class DocxReportRenderer : IReportRenderer
         return Task.FromResult(outputPath);
     }
 
-    /// <summary>Створює шаблон за замовчуванням, якщо його ще немає.</summary>
     public void EnsureTemplateExists()
     {
         if (File.Exists(_templatePath)) return;
         new ReportTemplateBuilder(_settings).Build(_templatePath);
     }
 
-    /// <summary>Перебудовує шаблон за поточними налаштуваннями, затираючи наявний.</summary>
     public void RebuildTemplate()
     {
         if (File.Exists(_templatePath)) File.Delete(_templatePath);
         new ReportTemplateBuilder(_settings).Build(_templatePath);
     }
 
-    /// <summary>Два рапорти за той самий період не мають затирати один одного.</summary>
     private static string MakeUniquePath(string path)
     {
         if (!File.Exists(path)) return path;

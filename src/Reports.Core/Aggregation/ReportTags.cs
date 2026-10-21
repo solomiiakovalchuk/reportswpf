@@ -1,9 +1,5 @@
 namespace Reports.Core.Aggregation;
 
-/// <summary>
-/// Теги шаблону документа. Скрипт нічого не знає про оформлення —
-/// він лише замінює ці рядки на обчислені значення.
-/// </summary>
 public static class ReportTags
 {
     public const string DateFrom = "{{ДАТА_З}}";

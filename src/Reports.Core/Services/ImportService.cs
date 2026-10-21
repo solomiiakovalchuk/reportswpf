@@ -3,7 +3,6 @@ using Reports.Core.Domain;
 
 namespace Reports.Core.Services;
 
-/// <summary>Підсумок синхронізації для показу користувачеві.</summary>
 public sealed record ImportResult(
     int TotalRows,
     int Imported,
@@ -30,10 +29,6 @@ public sealed record ImportResult(
     }
 }
 
-/// <summary>
-/// Переносить сирі рядки відповідей у доменну модель: зіставляє назви
-/// з довідниками, обчислює дату, відсіює вже імпортовані подачі.
-/// </summary>
 public sealed class ImportService
 {
     private readonly IMissionRepository _missions;
@@ -96,7 +91,6 @@ public sealed class ImportService
             fresh.Add(new Mission
             {
                 SourceRowKey = row.RowKey,
-                // Порожнє поле «Дата» у формі означає день подання.
                 Date = (row.Date ?? row.SubmittedAt).Date,
                 SubmittedAt = row.SubmittedAt,
                 OperatorEmail = row.OperatorEmail.Trim(),

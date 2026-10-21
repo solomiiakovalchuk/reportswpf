@@ -20,13 +20,6 @@
                         <ui:TextBlock Text="Джерело даних" FontTypography="BodyStrong" />
                     </ui:CardExpander.Header>
                     <StackPanel>
-                        <DockPanel LastChildFill="False" Margin="0,0,0,2">
-                            <ui:ToggleSwitch DockPanel.Dock="Left" IsChecked="{Binding UseDemoData}" />
-                            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" Margin="10,0,0,0"
-                                       Text="Демонстраційні дані (без Google та інтернету)" />
-                        </DockPanel>
-                        <TextBlock Text="{Binding SourceDescription}" Style="{StaticResource Hint}" />
-
                         <ui:TextBlock Text="Ідентифікатор Google-таблиці" Style="{StaticResource FieldLabel}" />
                         <ui:TextBox Text="{Binding SpreadsheetId}"
                                     PlaceholderText="1AbC…XyZ або повна адреса таблиці" />
@@ -165,6 +158,9 @@
                     <ui:Button Appearance="Secondary" Icon="{ui:SymbolIcon ArrowClockwise24}"
                                Content="Перебудувати шаблон" Margin="6,0,0,0"
                                Command="{Binding RebuildTemplateCommand}" />
+                    <ui:Button Appearance="Transparent" Icon="{ui:SymbolIcon Password24}"
+                               Content="Змінити пароль" Margin="6,0,0,0"
+                               Command="{Binding ChangePasswordCommand}" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

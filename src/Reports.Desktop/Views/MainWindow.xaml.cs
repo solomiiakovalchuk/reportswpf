@@ -11,7 +11,6 @@ public partial class MainWindow : FluentWindow
         InitializeComponent();
         SizeChanged += (_, _) =>
         {
-            // FluentWindow подекуди вмикає підгін розміру під вміст — тримаємо ручний режим.
             if (SizeToContent != SizeToContent.Manual)
                 SizeToContent = SizeToContent.Manual;
         };

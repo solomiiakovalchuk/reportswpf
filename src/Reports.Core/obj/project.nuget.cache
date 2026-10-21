@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "uu3Wct2p9LQ=",
+  "dgSpecHash": "YLvdLm/z/R8=",
   "success": true,
   "projectFilePath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Core\\Reports.Core.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\vygol\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

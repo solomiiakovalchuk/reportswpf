@@ -4,7 +4,6 @@ using Reports.Core.Domain;
 
 namespace Reports.Data.Repositories;
 
-/// <summary>Довідник «Люди»: підписанти рапортів і оператори.</summary>
 public sealed class PersonRepository : IPersonRepository
 {
     private readonly IDbContextFactory<AppDbContext> _factory;

@@ -13,6 +13,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <infra:EmptyToCollapsedConverter x:Key="EmptyToCollapsed" />
+            <infra:InverseBoolConverter x:Key="InverseBool" />
 
             <!-- Кожній моделі подання відповідає своя вкладка -->
             <DataTemplate DataType="{x:Type vm:ReportViewModel}">

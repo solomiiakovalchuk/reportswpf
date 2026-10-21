@@ -1,8 +1,5 @@
 namespace Reports.Core.Domain;
 
-/// <summary>
-/// Запис журналу сформованих рапортів: хто, коли, за який період і в якому форматі.
-/// </summary>
 public sealed class JournalEntry : Entity
 {
     public DateTime GeneratedAt { get; set; }
@@ -14,7 +11,6 @@ public sealed class JournalEntry : Entity
     public string SettlementFilter { get; set; } = string.Empty;
     public string Order { get; set; } = string.Empty;
 
-    /// <summary>Кількість епізодів, що потрапили у рапорт.</summary>
     public int MissionCount { get; set; }
 
     public string FilePath { get; set; } = string.Empty;

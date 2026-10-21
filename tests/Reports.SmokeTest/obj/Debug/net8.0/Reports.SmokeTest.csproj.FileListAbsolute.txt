@@ -3,6 +3,7 @@ D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\bin\Debug\net8.0\Repor
 D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\bin\Debug\net8.0\Reports.SmokeTest.runtimeconfig.json
 D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\bin\Debug\net8.0\Reports.SmokeTest.dll
 D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\bin\Debug\net8.0\Reports.SmokeTest.pdb
+D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\bin\Debug\net8.0\BCrypt.Net-Next.dll
 D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
 D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\bin\Debug\net8.0\DocumentFormat.OpenXml.Framework.dll
 D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\bin\Debug\net8.0\Google.Apis.dll
@@ -65,6 +66,7 @@ D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\obj\Debug\net8.0\Repor
 D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\obj\Debug\net8.0\Reports.SmokeTest.AssemblyInfoInputs.cache
 D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\obj\Debug\net8.0\Reports.SmokeTest.AssemblyInfo.cs
 D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\obj\Debug\net8.0\Reports.SmokeTest.csproj.CoreCompileInputs.cache
+D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\obj\Debug\net8.0\Reports.SmokeTest.sourcelink.json
 D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\obj\Debug\net8.0\Reports..E3803DDC.Up2Date
 D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\obj\Debug\net8.0\Reports.SmokeTest.dll
 D:\ХНУ\3kurs\кпз\ReportsWpf\tests\Reports.SmokeTest\obj\Debug\net8.0\refint\Reports.SmokeTest.dll

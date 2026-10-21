@@ -9,13 +9,8 @@ using Reports.Desktop.Infrastructure;
 
 namespace Reports.Desktop.ViewModels;
 
-/// <summary>
-/// Вікно формування рапорту: період, підписант, фільтри, наказ,
-/// попередній перегляд тексту й створення документа.
-/// </summary>
 public sealed class ReportViewModel : ObservableObject
 {
-    /// <summary>Позначка «фільтр не застосовується».</summary>
     public const string AnyOption = "— усі —";
 
     private readonly AppServices _services;
@@ -113,7 +108,6 @@ public sealed class ReportViewModel : ObservableObject
         OnPropertyChanged(nameof(PeriodSummary));
     }
 
-    /// <summary>Перечитує довідники: підписанти, оператори, населені пункти.</summary>
     public async Task LoadAsync()
     {
         var previousSigner = Signer?.Email;

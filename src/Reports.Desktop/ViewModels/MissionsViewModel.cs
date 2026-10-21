@@ -5,7 +5,6 @@ using Reports.Desktop.Infrastructure;
 
 namespace Reports.Desktop.ViewModels;
 
-/// <summary>Рядок таблиці відповідей у зручному для перегляду вигляді.</summary>
 public sealed class MissionRow : ObservableObject
 {
     private readonly Mission _mission;
@@ -39,10 +38,6 @@ public sealed class MissionRow : ObservableObject
     }
 }
 
-/// <summary>
-/// Вкладка «Відповіді»: синхронізація з джерелом, перегляд поданих
-/// епізодів і скасування помилкових записів.
-/// </summary>
 public sealed class MissionsViewModel : ObservableObject
 {
     private readonly AppServices _services;
@@ -59,7 +54,7 @@ public sealed class MissionsViewModel : ObservableObject
         SyncCommand = new AsyncRelayCommand(SyncAsync);
         ReloadCommand = new AsyncRelayCommand(LoadAsync);
         CancelCommand = new AsyncRelayCommand(ToggleCancelAsync, () => Selected is not null);
-        PublishCommand = new AsyncRelayCommand(PublishAsync, () => !services.Settings.UseDemoData);
+        PublishCommand = new AsyncRelayCommand(PublishAsync);
     }
 
     public ObservableCollection<MissionRow> Rows { get; } = new();
@@ -81,7 +76,6 @@ public sealed class MissionsViewModel : ObservableObject
     public AsyncRelayCommand CancelCommand { get; }
     public AsyncRelayCommand PublishCommand { get; }
 
-    /// <summary>Подія для головної моделі: дані змінилися, оновіть інші вкладки.</summary>
     public event EventHandler? DataChanged;
 
     public async Task LoadAsync()
@@ -123,20 +117,9 @@ public sealed class MissionsViewModel : ObservableObject
         }
     }
 
-    /// <summary>
-    /// Зворотний запис: дописує в таблицю нові довідники, людей і статуси.
-    /// Викликається окремою дією, а не після кожної правки — щоб запис
-    /// у спільний документ був передбачуваним.
-    /// </summary>
     private async Task PublishAsync()
     {
         var sink = _services.CreateResponseSink();
-        if (sink is null)
-        {
-            Summary = "У демонстраційному режимі вивантажувати нікуди. " +
-                      "Вимкніть демонстраційні дані у налаштуваннях.";
-            return;
-        }
 
         try
         {
@@ -158,7 +141,6 @@ public sealed class MissionsViewModel : ObservableObject
         }
     }
 
-    /// <summary>Довідники з джерела доливаються в базу: наявні записи не чіпаємо.</summary>
     private async Task SyncDirectoriesAsync(Core.Abstractions.IResponseSource source)
     {
         var raw = await source.LoadDirectoriesAsync();
@@ -209,7 +191,6 @@ public sealed class MissionsViewModel : ObservableObject
         var mission = await _services.Missions.GetByIdAsync(Selected.Id);
         if (mission is null) return;
 
-        // Помилкова подача не видаляється — вона позначається скасованою.
         mission.Status = mission.Status == RecordStatus.Cancelled
             ? RecordStatus.Active
             : RecordStatus.Cancelled;

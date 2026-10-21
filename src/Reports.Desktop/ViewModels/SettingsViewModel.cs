@@ -7,11 +7,6 @@ using Reports.Desktop.Infrastructure;
 
 namespace Reports.Desktop.ViewModels;
 
-/// <summary>
-/// Вкладка «Налаштування»: реквізити частини, джерело даних і шаблон.
-/// Постійні частини документа після зміни треба перенести у шаблон —
-/// для цього є команда «Перебудувати шаблон».
-/// </summary>
 public sealed class SettingsViewModel : ObservableObject
 {
     private readonly AppServices _services;
@@ -28,7 +23,8 @@ public sealed class SettingsViewModel : ObservableObject
         OpenTemplateCommand = new RelayCommand(() => OpenInShell(_services.TemplatePath));
         OpenDataFolderCommand = new RelayCommand(() => OpenInShell(_services.DataFolder));
         ForgetTokenCommand = new RelayCommand(ForgetToken);
-        CheckConnectionCommand = new AsyncRelayCommand(CheckConnectionAsync, () => !UseDemoData);
+        CheckConnectionCommand = new AsyncRelayCommand(CheckConnectionAsync);
+        ChangePasswordCommand = new RelayCommand(OpenChangePassword);
     }
 
     private AppSettings S => _services.Settings;
@@ -75,10 +71,6 @@ public sealed class SettingsViewModel : ObservableObject
         set { S.OrderDefault = value; OnPropertyChanged(); }
     }
 
-    /// <summary>
-    /// Ідентифікатор таблиці. Якщо вставили адресу цілком — беремо з неї
-    /// сам ідентифікатор, бо інакше Google відповість «не знайдено».
-    /// </summary>
     public string SpreadsheetId
     {
         get => S.SpreadsheetId;
@@ -113,21 +105,6 @@ public sealed class SettingsViewModel : ObservableObject
         set { S.OutputFolder = value; OnPropertyChanged(); }
     }
 
-    public bool UseDemoData
-    {
-        get => S.UseDemoData;
-        set
-        {
-            S.UseDemoData = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(SourceDescription));
-        }
-    }
-
-    public string SourceDescription => UseDemoData
-        ? "Джерело: демонстраційні дані (без інтернету)."
-        : "Джерело: Google Таблиця.";
-
     public string CredentialsStatus => File.Exists(_services.CredentialsPath)
         ? "Файл credentials.json знайдено."
         : "credentials.json відсутній — Google-синхронізація не працюватиме.";
@@ -141,19 +118,14 @@ public sealed class SettingsViewModel : ObservableObject
     public RelayCommand OpenDataFolderCommand { get; }
     public RelayCommand ForgetTokenCommand { get; }
     public AsyncRelayCommand CheckConnectionCommand { get; }
+    public RelayCommand ChangePasswordCommand { get; }
 
-    /// <summary>Результат перевірки зʼєднання з таблицею.</summary>
     public string ConnectionReport
     {
         get => _connectionReport;
         private set => Set(ref _connectionReport, value);
     }
 
-    /// <summary>
-    /// Відкриває таблицю, підбирає назви аркушів і звіряє заголовки колонок
-    /// форми з полями моделі. Знайдені назви одразу записуються у налаштування,
-    /// щоб не доводилося вгадувати їх вручну.
-    /// </summary>
     private async Task CheckConnectionAsync()
     {
         ConnectionReport = "Перевірка…";
@@ -176,7 +148,6 @@ public sealed class SettingsViewModel : ObservableObject
                 return;
             }
 
-            // Підібрані назви одразу застосовуємо, щоб синхронізація запрацювала.
             ResponsesSheet = diagnosis.ResponsesSheet;
             if (diagnosis.DirectoriesSheet is not null) DirectoriesSheet = diagnosis.DirectoriesSheet;
             if (diagnosis.PeopleSheet is not null) PeopleSheet = diagnosis.PeopleSheet;
@@ -246,6 +217,13 @@ public sealed class SettingsViewModel : ObservableObject
         {
             _report("Не вдалося видалити токен: " + ex.Message);
         }
+    }
+
+    private void OpenChangePassword()
+    {
+        var vm = new ChangePasswordViewModel(_services.Auth, _report);
+        var window = new Reports.Desktop.Views.ChangePasswordWindow { DataContext = vm };
+        window.ShowDialog();
     }
 
     private void OpenInShell(string path)

@@ -9,11 +9,6 @@ using Reports.Integration;
 
 namespace Reports.Desktop.Infrastructure;
 
-/// <summary>
-/// Корінь композиції: створює й зв'язує всі служби застосунку.
-/// Зібрано вручну, без контейнера — залежностей небагато, і так видно
-/// весь граф на одному екрані.
-/// </summary>
 public sealed class AppServices
 {
     private AppServices(
@@ -29,6 +24,7 @@ public sealed class AppServices
         ReportService reportService,
         DocxReportRenderer renderer,
         GoogleAuthenticator authenticator,
+        IAuthService auth,
         string dataFolder)
     {
         Settings = settings;
@@ -43,6 +39,7 @@ public sealed class AppServices
         Reports = reportService;
         Renderer = renderer;
         Authenticator = authenticator;
+        Auth = auth;
         DataFolder = dataFolder;
     }
 
@@ -58,23 +55,17 @@ public sealed class AppServices
     public ReportService Reports { get; }
     public DocxReportRenderer Renderer { get; }
     public GoogleAuthenticator Authenticator { get; }
+    public IAuthService Auth { get; }
     public string DataFolder { get; }
 
     public string TemplatePath => Renderer.TemplatePath;
     public string CredentialsPath => Authenticator.CredentialsPath;
 
-    /// <summary>Джерело даних відповідно до налаштувань: демонстраційне або Google.</summary>
     public IResponseSource CreateResponseSource() =>
-        Settings.UseDemoData
-            ? new DemoResponseSource()
-            : new GoogleSheetsResponseSource(Authenticator, Settings);
+        new GoogleSheetsResponseSource(Authenticator, Settings);
 
-    /// <summary>
-    /// Приймач для зворотного запису. У демонстраційному режимі його немає:
-    /// вигадані дані нікуди вивантажувати.
-    /// </summary>
-    public IResponseSink? CreateResponseSink() =>
-        Settings.UseDemoData ? null : new GoogleSheetsWriter(Authenticator, Settings);
+    public IResponseSink CreateResponseSink() =>
+        new GoogleSheetsWriter(Authenticator, Settings);
 
     public static AppServices Create()
     {
@@ -95,14 +86,14 @@ public sealed class AppServices
         var people = new PersonRepository(contextFactory);
         var missions = new MissionRepository(contextFactory);
         var journal = new JournalRepository(contextFactory);
+        var users = new UserRepository(contextFactory);
+        var auth = new AuthService(users);
 
         var renderer = new DocxReportRenderer(settings, Path.Combine(dataFolder, "template.docx"));
 
         var authenticator = new GoogleAuthenticator(
             Path.Combine(dataFolder, "credentials.json"),
-            // Нова тека: стара згода була лише на читання, потрібна повторна.
             Path.Combine(dataFolder, "token-rw"),
-            // Лише ASCII: з цієї назви складається заголовок User-Agent.
             "ReportsWpf");
 
         var reportService = new ReportService(
@@ -117,10 +108,9 @@ public sealed class AppServices
             references, people, missions, journal,
             new ImportService(missions, references),
             new PublishService(references, people, missions),
-            reportService, renderer, authenticator, dataFolder);
+            reportService, renderer, authenticator, auth, dataFolder);
     }
 
-    /// <summary>Створює базу з довідниками-прикладами і шаблон рапорту.</summary>
     public async Task InitializeAsync()
     {
         await DatabaseInitializer.EnsureCreatedAsync(ContextFactory);

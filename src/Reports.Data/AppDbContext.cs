@@ -3,10 +3,6 @@ using Reports.Core.Domain;
 
 namespace Reports.Data;
 
-/// <summary>
-/// Контекст локальної бази SQLite. Модель повторює ERD технічного проєкту:
-/// довідники → подача (Mission) → ураження цілі (TargetEngagement) → боєприпас (MunitionUse).
-/// </summary>
 public sealed class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
@@ -20,6 +16,7 @@ public sealed class AppDbContext : DbContext
     public DbSet<TargetEngagement> TargetEngagements => Set<TargetEngagement>();
     public DbSet<MunitionUse> MunitionUses => Set<MunitionUse>();
     public DbSet<JournalEntry> JournalEntries => Set<JournalEntry>();
+    public DbSet<AppUser> Users => Set<AppUser>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -60,7 +57,6 @@ public sealed class AppDbContext : DbContext
             e.Property(x => x.OperatorEmail).HasMaxLength(320);
             e.Property(x => x.Status).HasConversion<int>();
 
-            // Захист від повторного імпорту тієї самої подачі.
             e.HasIndex(x => x.SourceRowKey).IsUnique();
             e.HasIndex(x => x.Date);
 
@@ -123,9 +119,19 @@ public sealed class AppDbContext : DbContext
             e.Property(x => x.FilePath).HasMaxLength(1000);
             e.Ignore(x => x.Display);
         });
+
+        b.Entity<AppUser>(e =>
+        {
+            e.ToTable("Users");
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Username).IsRequired().HasMaxLength(100);
+            e.Property(x => x.PasswordHash).IsRequired().HasMaxLength(100);
+            e.Property(x => x.Role).HasConversion<int>();
+            e.HasIndex(x => x.Username).IsUnique();
+            e.Ignore(x => x.Display);
+        });
     }
 
-    /// <summary>Спільне налаштування трьох однотипних довідників.</summary>
     private static void ConfigureReference<T>(ModelBuilder b, string table) where T : ReferenceItem
     {
         b.Entity<T>(e =>

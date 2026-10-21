@@ -2,7 +2,6 @@ using System.Windows.Input;
 
 namespace Reports.Desktop.Infrastructure;
 
-/// <summary>Команда, що виконує переданий делегат.</summary>
 public sealed class RelayCommand : ICommand
 {
     private readonly Action<object?> _execute;
@@ -28,10 +27,6 @@ public sealed class RelayCommand : ICommand
     public void Execute(object? parameter) => _execute(parameter);
 }
 
-/// <summary>
-/// Асинхронна команда. Поки операція виконується, повторний запуск заблокований —
-/// інакше подвійне натискання «Створити документ» дало б два файли.
-/// </summary>
 public sealed class AsyncRelayCommand : ICommand
 {
     private readonly Func<object?, Task> _execute;

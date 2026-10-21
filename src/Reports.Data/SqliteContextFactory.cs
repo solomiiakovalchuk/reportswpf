@@ -2,11 +2,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Reports.Data;
 
-/// <summary>
-/// Фабрика контекстів для настільного застосунку: кожна операція отримує
-/// власний короткоживучий контекст, тому вікна не ділять між собою
-/// відстеження змін і не заважають одне одному.
-/// </summary>
 public sealed class SqliteContextFactory : IDbContextFactory<AppDbContext>
 {
     private readonly DbContextOptions<AppDbContext> _options;

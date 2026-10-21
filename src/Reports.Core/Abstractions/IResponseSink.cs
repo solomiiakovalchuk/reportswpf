@@ -2,13 +2,10 @@ using Reports.Core.Domain;
 
 namespace Reports.Core.Abstractions;
 
-/// <summary>Довідникова позиція для вивантаження: ліва й права колонки блоку.</summary>
 public readonly record struct DirectoryPair(string Left, string Right);
 
-/// <summary>Нове значення колонки «Статус» для конкретного рядка-джерела.</summary>
 public readonly record struct StatusChange(string SourceRowKey, string Marker);
 
-/// <summary>Те, що застосунок хоче записати назад у зовнішню таблицю.</summary>
 public sealed class PublishPayload
 {
     public IReadOnlyList<DirectoryPair> Uav { get; init; } = Array.Empty<DirectoryPair>();
@@ -23,7 +20,6 @@ public sealed class PublishPayload
         Settlements.Count == 0 && People.Count == 0 && Statuses.Count == 0;
 }
 
-/// <summary>Підсумок вивантаження для показу користувачеві.</summary>
 public sealed record PublishResult(
     int DirectoriesAdded,
     int PeopleAdded,
@@ -48,11 +44,6 @@ public sealed record PublishResult(
     }
 }
 
-/// <summary>
-/// Приймач даних: уміє дописувати у зовнішню таблицю те, що зʼявилося
-/// в застосунку. Навмисно тільки дописує й ніколи не видаляє чужі рядки —
-/// над тією самою таблицею працює ще й скрипт, і затирати його правки не можна.
-/// </summary>
 public interface IResponseSink
 {
     string Title { get; }

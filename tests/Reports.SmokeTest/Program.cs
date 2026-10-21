@@ -10,10 +10,6 @@ using Reports.Integration;
 
 Console.OutputEncoding = Encoding.UTF8;
 
-// Наскрізна перевірка ланцюга: база → імпорт демонстраційних даних →
-// зведення за період → формування .docx → журнал.
-// Працює в тимчасовій теці, тому нічого не псує в робочих даних.
-
 var folder = Path.Combine(Path.GetTempPath(), "ReportsSmokeTest_" + Guid.NewGuid().ToString("N")[..8]);
 Directory.CreateDirectory(folder);
 Console.WriteLine($"Робоча тека: {folder}");

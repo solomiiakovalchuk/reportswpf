@@ -1,8 +1,5 @@
 namespace Reports.Core.Periods;
 
-/// <summary>
-/// Період звітування — напівінтервал за календарними днями, обидві межі включно.
-/// </summary>
 public readonly record struct DatePeriod(DateTime From, DateTime To)
 {
     public static DatePeriod Of(DateTime from, DateTime to)

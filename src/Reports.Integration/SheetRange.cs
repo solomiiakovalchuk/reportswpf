@@ -1,12 +1,5 @@
 namespace Reports.Integration;
 
-/// <summary>
-/// Складання діапазонів у нотації A1.
-/// <para>
-/// Назву аркуша обовʼязково беремо в апострофи: типова назва від Google —
-/// «Відповіді форми 1» із пробілами, і без лапок такий діапазон не розбирається.
-/// </para>
-/// </summary>
 public static class SheetRange
 {
     public static string Of(string sheet, string a1)
@@ -15,7 +8,6 @@ public static class SheetRange
         return $"'{name}'!{a1}";
     }
 
-    /// <summary>Літерне позначення колонки за індексом: 0 → A, 25 → Z, 26 → AA.</summary>
     public static string Column(int index)
     {
         if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
@@ -30,7 +22,6 @@ public static class SheetRange
         return letters;
     }
 
-    /// <summary>Одна клітинка: індекс колонки (з нуля) і номер рядка (з одиниці).</summary>
     public static string Cell(string sheet, int columnIndex, int rowNumber) =>
         Of(sheet, $"{Column(columnIndex)}{rowNumber}");
 }

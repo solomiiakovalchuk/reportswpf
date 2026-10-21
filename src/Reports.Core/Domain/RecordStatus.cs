@@ -1,19 +1,11 @@
 namespace Reports.Core.Domain;
 
-/// <summary>
-/// Статус запису у журналі відповідей. Помилкова подача не видаляється,
-/// а позначається як <see cref="Cancelled"/> — слід залишається,
-/// звітність не змінюється заднім числом непомітно.
-/// </summary>
 public enum RecordStatus
 {
-    /// <summary>Запис іде в рапорт.</summary>
     Active = 0,
 
-    /// <summary>Запис ігнорується назавжди (колонка «Статус» = СКАСОВАНО).</summary>
     Cancelled = 1,
 
-    /// <summary>Значення не знайдено в довіднику — запис потребує ручного розбору.</summary>
     NeedsAttention = 2
 }
 

@@ -4,11 +4,6 @@ using Reports.Core.Services;
 
 namespace Reports.Desktop.Infrastructure;
 
-/// <summary>
-/// Зберігає налаштування у файлі JSON поряд із базою даних.
-/// Пошкоджений або відсутній файл не має валити застосунок —
-/// у такому разі беруться значення за замовчуванням.
-/// </summary>
 public sealed class SettingsStore
 {
     private static readonly JsonSerializerOptions Options = new()

@@ -13,3 +13,4 @@ D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\Repor
 D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\refint\Reports.Integration.dll
 D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\Reports.Integration.pdb
 D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\ref\Reports.Integration.dll
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Integration\obj\Debug\net8.0\Reports.Integration.sourcelink.json

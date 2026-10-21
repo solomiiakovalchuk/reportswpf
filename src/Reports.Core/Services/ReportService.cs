@@ -4,16 +4,11 @@ using Reports.Core.Domain;
 
 namespace Reports.Core.Services;
 
-/// <summary>Помилка, зрозуміла користувачеві: показується у вікні, а не в стек-трейсі.</summary>
 public sealed class ReportException : Exception
 {
     public ReportException(string message) : base(message) { }
 }
 
-/// <summary>
-/// Формування рапорту: відбір епізодів, зведення, створення файлу,
-/// запис у журнал. Рендерери підставляються ззовні за форматом.
-/// </summary>
 public sealed class ReportService
 {
     private readonly IMissionRepository _missions;
@@ -36,7 +31,6 @@ public sealed class ReportService
         _settings = settings;
     }
 
-    /// <summary>Обчислити вміст рапорту без створення файлу — для попереднього перегляду.</summary>
     public async Task<ReportContent> PreviewAsync(ReportRequest request, CancellationToken ct = default)
     {
         Validate(request);
@@ -44,7 +38,6 @@ public sealed class ReportService
         return _aggregator.Aggregate(request, all);
     }
 
-    /// <summary>Сформувати документ і зареєструвати його у журналі.</summary>
     public async Task<string> GenerateAsync(ReportRequest request, CancellationToken ct = default)
     {
         var content = await PreviewAsync(request, ct);

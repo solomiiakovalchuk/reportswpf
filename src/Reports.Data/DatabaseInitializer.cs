@@ -3,10 +3,6 @@ using Reports.Core.Domain;
 
 namespace Reports.Data;
 
-/// <summary>
-/// Створює базу при першому запуску і наповнює довідники прикладами,
-/// щоб програму можна було відкрити й одразу спробувати без Google.
-/// </summary>
 public static class DatabaseInitializer
 {
     public static async Task EnsureCreatedAsync(
@@ -15,6 +11,28 @@ public static class DatabaseInitializer
     {
         await using var db = await factory.CreateDbContextAsync(ct);
         await db.Database.EnsureCreatedAsync(ct);
+
+        // Add Users table to existing databases that predate auth feature
+        await db.Database.ExecuteSqlRawAsync("""
+            CREATE TABLE IF NOT EXISTS "Users" (
+                "Id"           INTEGER NOT NULL CONSTRAINT "PK_Users" PRIMARY KEY AUTOINCREMENT,
+                "Username"     TEXT    NOT NULL,
+                "PasswordHash" TEXT    NOT NULL,
+                "Role"         INTEGER NOT NULL DEFAULT 1
+            );
+            CREATE UNIQUE INDEX IF NOT EXISTS "IX_Users_Username" ON "Users" ("Username");
+            """, ct);
+
+        if (!await db.Users.AnyAsync(ct))
+        {
+            db.Users.Add(new AppUser
+            {
+                Username = "admin",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin"),
+                Role = UserRole.Admin
+            });
+            await db.SaveChangesAsync(ct);
+        }
 
         if (await db.UavTypes.AnyAsync(ct)) return;
 

@@ -6,7 +6,6 @@ using Reports.Desktop.Infrastructure;
 
 namespace Reports.Desktop.ViewModels;
 
-/// <summary>Вкладка «Журнал»: аудит сформованих рапортів.</summary>
 public sealed class JournalViewModel : ObservableObject
 {
     private readonly AppServices _services;

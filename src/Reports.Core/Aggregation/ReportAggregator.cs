@@ -2,11 +2,6 @@ using Reports.Core.Domain;
 
 namespace Reports.Core.Aggregation;
 
-/// <summary>
-/// Зводить епізоди періоду у значення тегів рапорту.
-/// Набір правил передається ззовні — додати новий тег означає
-/// написати ще один <see cref="IAggregationRule"/>, а не правити цей клас.
-/// </summary>
 public sealed class ReportAggregator
 {
     private readonly IReadOnlyList<IAggregationRule> _rules;
@@ -18,7 +13,6 @@ public sealed class ReportAggregator
             throw new ArgumentException("Набір правил агрегації порожній.", nameof(rules));
     }
 
-    /// <summary>Стандартний набір правил — усі теги шаблону рапорту.</summary>
     public static ReportAggregator CreateDefault() => new(new IAggregationRule[]
     {
         new DateFromRule(),
@@ -35,7 +29,6 @@ public sealed class ReportAggregator
         new SignerNameRule()
     });
 
-    /// <summary>Відібрати епізоди, що проходять фільтри запиту, і обчислити теги.</summary>
     public ReportContent Aggregate(ReportRequest request, IEnumerable<Mission> allMissions)
     {
         var selected = allMissions.Where(request.Matches)

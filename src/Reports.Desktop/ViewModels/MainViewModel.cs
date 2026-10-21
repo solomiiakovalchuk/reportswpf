@@ -6,10 +6,6 @@ using Wpf.Ui.Controls;
 
 namespace Reports.Desktop.ViewModels;
 
-/// <summary>
-/// Головна модель подання: бічна навігація, поточний вміст, рядок стану
-/// й перемикання теми.
-/// </summary>
 public sealed class MainViewModel : ObservableObject
 {
     private readonly AppServices _services;
@@ -27,7 +23,6 @@ public sealed class MainViewModel : ObservableObject
         Journal = new JournalViewModel(services, SetStatus);
         Settings = new SettingsViewModel(services, SetStatus);
 
-        // Зміна даних в одній вкладці має бути видна в інших.
         Missions.DataChanged += async (_, _) => await RefreshDependentAsync();
         Directories.DataChanged += async (_, _) => await RefreshDependentAsync();
 
@@ -91,7 +86,7 @@ public sealed class MainViewModel : ObservableObject
         await Report.LoadAsync();
         await Journal.LoadAsync();
 
-        SetStatus(Settings.SourceDescription);
+        SetStatus("Джерело: Google Таблиця.");
     }
 
     private async Task RefreshDependentAsync()
@@ -111,13 +106,10 @@ public sealed class MainViewModel : ObservableObject
     {
         var box = new Wpf.Ui.Controls.MessageBox
         {
-            Title = "Про програму",
+            Title = "Довідка",
             Content =
-                "Система формування рапортів про використання БпЛА та боєприпасів\n\n" +
-                "Лабораторні роботи з дисципліни «Конструювання програмного забезпечення»\n" +
-                "Хмельницький національний університет\n\n" +
-                "C# / .NET 8 · WPF (MVVM) · WPF-UI (Fluent) · EF Core + SQLite ·\n" +
-                "Google Sheets API · DocumentFormat.OpenXml\n\n" +
+                "Синхронізація: натисніть «Синхронізація». У розділі «Відповіді» перевірте записи: помилкові скасуйте кнопкою «Скасувати / повернути», а при статусі «Потребує уваги» — додайте відсутні позиції у довідники.\n" +
+                "Формування рапорту: на сторінці «Формування рапорту» виберіть період, підписанта, фільтри та «Бойовий наказ». Натисніть «Переглянути текст» -> «Створити документ» -> «Відкрити файл».\n" +
                 $"Тека даних:\n{_services.DataFolder}",
             CloseButtonText = "Закрити"
         };

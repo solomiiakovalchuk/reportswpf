@@ -1,10 +1,5 @@
 namespace Reports.Core.Services;
 
-/// <summary>
-/// Постійні реквізити частини. Аналог блоку CONFIG у скриптовій версії.
-/// Гриф, адресат і резолюція вписуються у шаблон .docx при його створенні,
-/// тому тут зберігаються лише для перебудови шаблону.
-/// </summary>
 public sealed class AppSettings
 {
     public string Classification { get; set; } = "ВІДКРИТА ІНФОРМАЦІЯ";
@@ -24,20 +19,17 @@ public sealed class AppSettings
 
     public string DefaultSignerEmail { get; set; } = string.Empty;
 
-    /// <summary>Ідентифікатор Google-таблиці «Рапорти БпЛА» (з адреси документа).</summary>
     public string SpreadsheetId { get; set; } = string.Empty;
 
-    /// <summary>Назва аркуша з відповідями форми.</summary>
     public string ResponsesSheet { get; set; } = "Відповіді";
 
     public string DirectoriesSheet { get; set; } = "Довідники";
     public string PeopleSheet { get; set; } = "Люди";
 
-    /// <summary>Тека, куди складаються сформовані рапорти.</summary>
     public string OutputFolder { get; set; } = string.Empty;
 
-    /// <summary>Працювати на демонстраційних даних, не звертаючись до Google.</summary>
-    public bool UseDemoData { get; set; } = true;
+    // Google account that is allowed to reset the admin password
+    public string AdminGoogleEmail { get; set; } = string.Empty;
 
     public string FontName { get; set; } = "Times New Roman";
     public int FontSize { get; set; } = 14;

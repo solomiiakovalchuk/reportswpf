@@ -1,9 +1,15 @@
 .vscode/
 .vs/
 .idea/
-bin/
-obj/
+
+# Build outputs
+**/bin/
+**/obj/
+
+# Sonar analysis cache
 .sonar/
+.sonarqube/
+sonar-project.properties
 
 *.user
 *.suo

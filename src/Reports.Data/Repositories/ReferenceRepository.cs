@@ -4,7 +4,6 @@ using Reports.Core.Domain;
 
 namespace Reports.Data.Repositories;
 
-/// <summary>Довідники БпЛА, цілей, боєприпасів і місць у локальній базі.</summary>
 public sealed class ReferenceRepository : IReferenceRepository
 {
     private readonly IDbContextFactory<AppDbContext> _factory;

@@ -13,3 +13,4 @@ D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\Reports
 D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\refint\Reports.Documents.dll
 D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\Reports.Documents.pdb
 D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\ref\Reports.Documents.dll
+D:\ХНУ\3kurs\кпз\ReportsWpf\src\Reports.Documents\obj\Debug\net8.0\Reports.Documents.sourcelink.json

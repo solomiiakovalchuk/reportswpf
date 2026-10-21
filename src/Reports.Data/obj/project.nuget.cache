@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "rXzeXadqOjU=",
+  "dgSpecHash": "x9ulR3anXKY=",
   "success": true,
   "projectFilePath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\src\\Reports.Data\\Reports.Data.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\vygol\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\vygol\\.nuget\\packages\\microsoft.data.sqlite.core\\8.0.10\\microsoft.data.sqlite.core.8.0.10.nupkg.sha512",
     "C:\\Users\\vygol\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.10\\microsoft.entityframeworkcore.8.0.10.nupkg.sha512",
     "C:\\Users\\vygol\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.10\\microsoft.entityframeworkcore.abstractions.8.0.10.nupkg.sha512",

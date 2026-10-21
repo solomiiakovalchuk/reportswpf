@@ -1,10 +1,5 @@
 namespace Reports.Integration;
 
-/// <summary>
-/// Зіставлення колонок аркуша «Відповіді» з полями моделі за текстом заголовка.
-/// Прив'язка за змістом, а не за номером колонки: питання у формі можна
-/// переставити чи додати нове — імпорт продовжить працювати.
-/// </summary>
 public sealed class ResponseColumnMap
 {
     public int Timestamp { get; private set; } = -1;
@@ -18,7 +13,6 @@ public sealed class ResponseColumnMap
 
     private readonly List<int> _munitions = new();
 
-    /// <summary>Колонки боєприпасів (до трьох на ціль), у порядку появи.</summary>
     public IReadOnlyList<int> Munitions => _munitions;
 
     public static ResponseColumnMap FromHeader(IList<object> header)
@@ -50,7 +44,6 @@ public sealed class ResponseColumnMap
 
             if (title.Contains("боєприпас"))
             {
-                // «Додати боєприпас 2?» — це питання розгалуження, а не сам боєприпас.
                 if (!title.Contains("додати") && !title.Contains("?"))
                     map._munitions.Add(i);
                 continue;
@@ -63,17 +56,14 @@ public sealed class ResponseColumnMap
                 map.Date = i;
         }
 
-        // Перша колонка форми — завжди позначка часу, навіть якщо заголовок незвичний.
         if (map.Timestamp < 0 && header.Count > 0) map.Timestamp = 0;
 
         return map;
     }
 
-    /// <summary>Значення клітинки за індексом колонки; порожньо, якщо колонки немає.</summary>
     public string Value(IList<object> row, int column) =>
         column >= 0 && column < row.Count ? row[column]?.ToString()?.Trim() ?? string.Empty : string.Empty;
 
-    /// <summary>Перелік полів, які не вдалося знайти — для діагностики у вікні синхронізації.</summary>
     public IReadOnlyList<string> MissingFields()
     {
         var missing = new List<string>();

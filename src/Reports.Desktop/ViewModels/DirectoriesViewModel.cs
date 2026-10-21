@@ -5,10 +5,6 @@ using Reports.Desktop.Infrastructure;
 
 namespace Reports.Desktop.ViewModels;
 
-/// <summary>
-/// Рядок довідника для таблиці. Ліва колонка — те, що бачить оператор
-/// у формі; права — те, що йде в текст рапорту (для місць — область).
-/// </summary>
 public sealed class ReferenceRow : ObservableObject
 {
     public ReferenceRow(ReferenceItem item) => Item = item;
@@ -33,7 +29,6 @@ public sealed class ReferenceRow : ObservableObject
     }
 }
 
-/// <summary>Один блок довідника з власними командами додавання, збереження й видалення.</summary>
 public sealed class DirectorySection : ObservableObject
 {
     private readonly IReferenceRepository _repository;
@@ -124,7 +119,6 @@ public sealed class DirectorySection : ObservableObject
         _report($"{Title}: запис видалено.");
     }
 
-    // Репозиторій узагальнений за типом елемента, тому диспетчеризуємо явно.
     private Task SaveItemAsync(ReferenceItem item) => item switch
     {
         UavType u => _repository.SaveAsync(u),
@@ -144,7 +138,6 @@ public sealed class DirectorySection : ObservableObject
     };
 }
 
-/// <summary>Вкладка «Довідники»: чотири блоки + окремий список людей.</summary>
 public sealed class DirectoriesViewModel : ObservableObject
 {
     private readonly AppServices _services;

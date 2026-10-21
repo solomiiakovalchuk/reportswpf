@@ -1,3 +1,5 @@
+using System.Text;
+using System.Text.Json;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Services;
@@ -5,28 +7,13 @@ using Google.Apis.Util.Store;
 
 namespace Reports.Integration;
 
-/// <summary>
-/// Помилка налаштування доступу до Google — показується користувачеві як підказка,
-/// що саме треба донастроїти, а не як виняток бібліотеки.
-/// </summary>
 public sealed class GoogleAccessException : Exception
 {
     public GoogleAccessException(string message, Exception? inner = null) : base(message, inner) { }
 }
 
-/// <summary>
-/// Авторизація десктопного застосунку в Google (OAuth 2.0, тип «Desktop app»).
-/// <para>
-/// Перший запуск відкриває браузер і просить згоду; отриманий токен
-/// кешується у теці <c>token</c>, далі згода більше не потрібна.
-/// </para>
-/// </summary>
 public sealed class GoogleAuthenticator
 {
-    /// <summary>
-    /// Читання й запис таблиці: застосунок не лише забирає відповіді,
-    /// а й дописує довідники, людей і колонку «Статус».
-    /// </summary>
     private static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
 
     private readonly string _credentialsPath;
@@ -53,16 +40,26 @@ public sealed class GoogleAuthenticator
                 "OAuth client ID → тип «Desktop app» → Download JSON.\n" +
                 $"Покладіть файл сюди:\n{_credentialsPath}");
 
+        using var consentTimeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        consentTimeout.CancelAfter(TimeSpan.FromMinutes(3));
+
         UserCredential credential;
         try
         {
             await using var stream = File.OpenRead(_credentialsPath);
+            var secrets = GoogleClientSecrets.FromStream(stream).Secrets;
             credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                GoogleClientSecrets.FromStream(stream).Secrets,
+                secrets,
                 Scopes,
                 user: "user",
-                ct,
+                consentTimeout.Token,
                 new FileDataStore(_tokenFolder, fullPath: true));
+        }
+        catch (OperationCanceledException) when (!ct.IsCancellationRequested)
+        {
+            throw new GoogleAccessException(
+                "Не дочекалися згоди в браузері (3 хв). Натисніть кнопку ще раз " +
+                "і завершіть вхід у Google у вікні браузера.");
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
@@ -79,12 +76,6 @@ public sealed class GoogleAuthenticator
         });
     }
 
-    /// <summary>
-    /// Прибирає з назви застосунку все, що не входить у ASCII.
-    /// Google-клієнт підставляє її у заголовок User-Agent, а заголовки HTTP
-    /// не допускають символів поза ASCII — кирилиця в назві валить будь-який
-    /// запит із помилкою «The format of value ... is invalid».
-    /// </summary>
     private static string ToHeaderSafe(string name)
     {
         var safe = new string((name ?? string.Empty)
@@ -95,7 +86,72 @@ public sealed class GoogleAuthenticator
         return safe.Length == 0 ? "ReportsWpf" : safe;
     }
 
-    /// <summary>Забути збережений токен — знадобиться при зміні акаунта.</summary>
+    // Always opens the browser — used for password-reset identity proof.
+    // Returns the authenticated Google email so the caller can verify it.
+    public async Task<string> VerifyInteractiveAsync(CancellationToken ct = default)
+    {
+        if (!HasCredentialsFile)
+            throw new GoogleAccessException(
+                $"Не знайдено файл «{Path.GetFileName(_credentialsPath)}».\n\n" +
+                "Для скидання пароля потрібен файл credentials.json у теці даних.");
+
+        var verifyFolder = Path.Combine(_tokenFolder, "reset_verify");
+
+        // Always delete first to force the browser to open
+        if (Directory.Exists(verifyFolder))
+            Directory.Delete(verifyFolder, recursive: true);
+
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        timeout.CancelAfter(TimeSpan.FromMinutes(3));
+
+        UserCredential credential;
+        try
+        {
+            await using var stream = File.OpenRead(_credentialsPath);
+            var secrets = GoogleClientSecrets.FromStream(stream).Secrets;
+            credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                secrets,
+                [.. Scopes, "email", "openid"],
+                user: "reset_verify",
+                timeout.Token,
+                new FileDataStore(verifyFolder, fullPath: true));
+        }
+        catch (OperationCanceledException) when (!ct.IsCancellationRequested)
+        {
+            throw new GoogleAccessException(
+                "Не дочекалися входу в браузері (3 хв). Спробуйте ще раз.");
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            throw new GoogleAccessException(
+                "Не вдалося підтвердити особу через Google.", ex);
+        }
+        finally
+        {
+            if (Directory.Exists(verifyFolder))
+                Directory.Delete(verifyFolder, recursive: true);
+        }
+
+        return ExtractEmailFromIdToken(credential.Token.IdToken)
+               ?? throw new GoogleAccessException(
+                   "Не вдалося отримати email з Google-токена.");
+    }
+
+    private static string? ExtractEmailFromIdToken(string? idToken)
+    {
+        if (string.IsNullOrEmpty(idToken)) return null;
+        var parts = idToken.Split('.');
+        if (parts.Length < 2) return null;
+
+        // JWT payload: base64url-encoded JSON
+        var payload = parts[1];
+        var padded = payload + new string('=', (4 - payload.Length % 4) % 4);
+        var json = Encoding.UTF8.GetString(Convert.FromBase64String(padded));
+
+        using var doc = JsonDocument.Parse(json);
+        return doc.RootElement.TryGetProperty("email", out var el) ? el.GetString() : null;
+    }
+
     public void ForgetToken()
     {
         if (Directory.Exists(_tokenFolder))

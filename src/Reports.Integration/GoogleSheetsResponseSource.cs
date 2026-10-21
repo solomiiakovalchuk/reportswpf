@@ -6,14 +6,6 @@ using Reports.Core.Services;
 
 namespace Reports.Integration;
 
-/// <summary>
-/// Читає довідники, людей і відповіді форми з Google-таблиці.
-/// <para>
-/// Колонки аркуша «Відповіді» шукаються <b>за заголовками</b>, а не за
-/// фіксованими номерами: питання у формі можна переставити або додати,
-/// і синхронізація не зламається.
-/// </para>
-/// </summary>
 public sealed class GoogleSheetsResponseSource : IResponseSource
 {
     private readonly GoogleAuthenticator _authenticator;
@@ -36,7 +28,6 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
 
         return new RawDirectories
         {
-            // Чотири блоки довідників лежать поруч: A|B, D|E, G|H, J|K, дані з рядка 3.
             Uav = ReadPairs(directories, leftColumn: 0),
             Targets = ReadPairs(directories, leftColumn: 3),
             Munitions = ReadPairs(directories, leftColumn: 6),
@@ -64,7 +55,6 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
 
             result.Add(new RawResponseRow
             {
-                // Номер рядка робить ключ стабільним навіть за однакових позначок часу.
                 RowKey = $"{map.Value(row, map.Timestamp)}|{i + 1}",
                 SubmittedAt = submitted,
                 Date = ParseDate(map.Value(row, map.Date)),
@@ -84,11 +74,6 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
         return result;
     }
 
-    /// <summary>
-    /// Назви всіх аркушів таблиці. Потрібні для перевірки зʼєднання:
-    /// Google називає аркуш відповідей «Відповіді форми 1», а не «Відповіді»,
-    /// і без цієї перевірки розбіжність виявляється лише порожньою синхронізацією.
-    /// </summary>
     public async Task<IReadOnlyList<string>> ListSheetsAsync(CancellationToken ct = default)
     {
         using var service = await CreateServiceAsync(ct);
@@ -112,10 +97,6 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
         }
     }
 
-    /// <summary>
-    /// Підбирає назву аркуша зі списку за набором можливих початків назви.
-    /// Повертає null, якщо нічого схожого немає.
-    /// </summary>
     public static string? MatchSheet(IEnumerable<string> titles, params string[] prefixes)
     {
         var list = titles.ToList();
@@ -137,9 +118,6 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
         return null;
     }
 
-    /// <summary>
-    /// Результат перевірки зʼєднання: що знайдено в таблиці і чого бракує.
-    /// </summary>
     public sealed class Diagnosis
     {
         public required IReadOnlyList<string> SheetTitles { get; init; }
@@ -153,10 +131,6 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
         public bool IsUsable => ResponsesSheet is not null && MissingFields.Count == 0;
     }
 
-    /// <summary>
-    /// Перевіряє зʼєднання: відкриває таблицю, підбирає аркуші за назвами
-    /// й зіставляє заголовки колонок форми з полями моделі.
-    /// </summary>
     public async Task<Diagnosis> DiagnoseAsync(CancellationToken ct = default)
     {
         var titles = await ListSheetsAsync(ct);
@@ -211,10 +185,6 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
         };
     }
 
-    /// <summary>
-    /// Витягує ідентифікатор із того, що вставив користувач. Найчастіша помилка —
-    /// скопійована адреса цілком; тоді Google повертає 404, і причина неочевидна.
-    /// </summary>
     public static string NormalizeSpreadsheetId(string raw)
     {
         var value = (raw ?? string.Empty).Trim();
@@ -224,14 +194,9 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
             value, @"/spreadsheets/d/([a-zA-Z0-9-_]+)");
         if (match.Success) return match.Groups[1].Value;
 
-        // Просто адреса без /d/ — віддаємо як є, хай Google скаже своє.
         return value;
     }
 
-    /// <summary>
-    /// Перекладає відповідь Google API у пораду, що саме робити.
-    /// Код відповіді тут головний: 403 і 404 лікуються по-різному.
-    /// </summary>
     private string DescribeApiError(Google.GoogleApiException ex, string action)
     {
         var detail = ex.Error?.Message ?? ex.Message;
@@ -305,7 +270,6 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
         }
     }
 
-    /// <summary>Читає блок довідника з двох сусідніх колонок, починаючи з рядка 3.</summary>
     private static IReadOnlyList<(string, string)> ReadPairs(IList<IList<object>> rows, int leftColumn)
     {
         var pairs = new List<(string, string)>();
@@ -364,7 +328,6 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
                               DateTimeStyles.None, out var current))
             return current;
 
-        // Google іноді віддає дату як серійне число Excel.
         if (double.TryParse(raw.Trim(), NumberStyles.Any, CultureInfo.InvariantCulture, out var serial)
             && serial > 20000 && serial < 80000)
             return new DateTime(1899, 12, 30).AddDays(serial);

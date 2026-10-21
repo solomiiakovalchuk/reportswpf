@@ -3,11 +3,6 @@ using Reports.Core.Domain;
 
 namespace Reports.Integration;
 
-/// <summary>
-/// Демонстраційне джерело даних: вигадані подачі за останні три тижні.
-/// Дозволяє відкрити програму й сформувати рапорт без Google і без інтернету —
-/// саме на таких даних належить показувати роботу системи.
-/// </summary>
 public sealed class DemoResponseSource : IResponseSource
 {
     private readonly DateTime _today;
@@ -94,7 +89,6 @@ public sealed class DemoResponseSource : IResponseSource
         Add(11, "operator2@example.com", "Ямпіль", "Мавік", "розвід. БпЛА", 2, new[] { "ТШ-200" });
         Add(9, "operator1@example.com", "Вербове", "FPV", "укріплення", 3, new[] { "ТШ-200", "ЕД-8" });
         Add(8, "operator2@example.com", "Ямпіль", "Кажан", "жива сила", 2, new[] { "ВОГ-17" });
-        // Помилкова подача: не видалена, а скасована — слід залишається.
         Add(7, "operator2@example.com", "Ямпіль", "FPV", "жива сила", 40,
             new[] { "ВОГ-17" }, RecordStatusExtensions.CancelledMarker);
         Add(5, "operator1@example.com", "Ліски", "FPV", "автомобіль", 2, new[] { "ТШ-200" });

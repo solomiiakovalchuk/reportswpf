@@ -3,14 +3,6 @@ using Reports.Core.Domain;
 
 namespace Reports.Core.Services;
 
-/// <summary>
-/// Збирає локальні довідники, людей і статуси записів та передає їх
-/// приймачу для запису у зовнішню таблицю.
-/// <para>
-/// Сам сервіс не вирішує, чого в таблиці бракує: він віддає повний зріз,
-/// а звіряння з наявним вмістом робить приймач — лише він бачить таблицю.
-/// </para>
-/// </summary>
 public sealed class PublishService
 {
     private readonly IReferenceRepository _references;
@@ -41,7 +33,6 @@ public sealed class PublishService
             Uav = Pairs(uav),
             Targets = Pairs(targets),
             Munitions = Pairs(munitions),
-            // У блоці місць права колонка — область, а не повна назва.
             Settlements = settlements
                 .Where(s => !string.IsNullOrWhiteSpace(s.ShortName))
                 .Select(s => new DirectoryPair(s.ShortName.Trim(), s.Region.Trim()))

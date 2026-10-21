@@ -6,30 +6,19 @@ using Reports.Core.Services;
 
 namespace Reports.Documents;
 
-/// <summary>
-/// Створює шаблон рапорту .docx із тегами.
-/// <para>
-/// Постійні частини (гриф, адресат, резолюція, назва підрозділу) вписуються
-/// у шаблон при його створенні з <see cref="AppSettings"/>. Далі шаблон можна
-/// вільно переверстувати руками — програма про оформлення нічого не знає,
-/// вона лише замінює теги.
-/// </para>
-/// </summary>
 public sealed class ReportTemplateBuilder
 {
-    // Word рахує відступи у твіпах: 1 пункт = 20 твіпів.
-    private const int MarginLeft = 85 * 20;    // 30 мм
-    private const int MarginRight = 28 * 20;   // 10 мм
-    private const int MarginTop = 57 * 20;     // 20 мм
-    private const int MarginBottom = 57 * 20;  // 20 мм
-    private const int FirstLineIndent = 35 * 20; // ≈1,25 см
-    private const string LineSpacing = "360";  // 240 = одинарний, 360 = 1,5
+    private const int MarginLeft = 85 * 20;
+    private const int MarginRight = 28 * 20;
+    private const int MarginTop = 57 * 20;
+    private const int MarginBottom = 57 * 20;
+    private const int FirstLineIndent = 35 * 20;
+    private const string LineSpacing = "360";
 
     private readonly AppSettings _settings;
 
     public ReportTemplateBuilder(AppSettings settings) => _settings = settings;
 
-    /// <summary>Створює файл шаблону за вказаним шляхом, перезаписуючи наявний.</summary>
     public void Build(string path)
     {
         var folder = Path.GetDirectoryName(path);
@@ -57,7 +46,6 @@ public sealed class ReportTemplateBuilder
         body.AppendChild(Line("РАПОРТ", JustificationValues.Center, bold: true));
         body.AppendChild(Empty());
 
-        // Основне речення рапорту — саме воно наповнюється тегами.
         body.AppendChild(Line(ReportContent.SentenceTemplate,
                               JustificationValues.Both,
                               firstLineIndent: true));
@@ -99,7 +87,6 @@ public sealed class ReportTemplateBuilder
 
     private Paragraph Empty() => Line(string.Empty, JustificationValues.Left);
 
-    /// <summary>Абзац із кількох рядків, розділених \n у налаштуваннях.</summary>
     private Paragraph Multiline(string text, JustificationValues alignment)
     {
         var lines = (text ?? string.Empty).Replace("\r\n", "\n").Split('\n');
@@ -150,7 +137,7 @@ public sealed class ReportTemplateBuilder
     }
 
     private static SectionProperties SectionProperties() => new(
-        new PageSize { Width = 11906, Height = 16838 },   // A4
+        new PageSize { Width = 11906, Height = 16838 },
         new PageMargin
         {
             Left = (uint)MarginLeft,

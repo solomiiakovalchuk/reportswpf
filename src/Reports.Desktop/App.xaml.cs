@@ -18,15 +18,27 @@ public partial class App : Application
 
         try
         {
+            // Prevent WPF from shutting down when LoginWindow closes before MainWindow opens
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
             var services = AppServices.Create();
             await services.InitializeAsync();
+
+            var loginVm = new LoginViewModel(services.Auth);
+            var loginWindow = new LoginWindow { DataContext = loginVm, Services = services };
+
+            bool loggedIn = false;
+            loginVm.LoginSucceeded += (_, _) => { loginWindow.Close(); loggedIn = true; };
+            loginWindow.ShowDialog();
+
+            if (!loggedIn) { Shutdown(0); return; }
 
             var model = new MainViewModel(services);
             await model.LoadAsync();
 
             MainWindow = new MainWindow { DataContext = model };
+            ShutdownMode = ShutdownMode.OnMainWindowClose;
 
-            // Тема слідує за системною, поки користувач не перемкне вручну.
             ApplicationThemeManager.ApplySystemTheme();
             SystemThemeWatcher.Watch(MainWindow);
 
@@ -58,10 +70,6 @@ public partial class App : Application
         e.Handled = true;
     }
 
-    /// <summary>
-    /// Пише виняток у журнал помилок. Без цього діагностика збою на чужій
-    /// машині зводиться до переказу тексту з екрана.
-    /// </summary>
     private static void Log(string title, Exception exception)
     {
         try
@@ -78,7 +86,6 @@ public partial class App : Application
         }
         catch
         {
-            // Журнал помилок сам по собі не має валити застосунок.
         }
     }
 }

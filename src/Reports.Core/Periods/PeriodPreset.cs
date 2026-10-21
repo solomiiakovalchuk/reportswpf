@@ -1,10 +1,5 @@
 namespace Reports.Core.Periods;
 
-/// <summary>
-/// Пресет періоду «одним кліком». Кожен нащадок сам вирішує, який
-/// проміжок повернути відносно поточної дати — класичний поліморфізм,
-/// який прибирає розгалуження switch з інтерфейсу.
-/// </summary>
 public abstract class PeriodPreset
 {
     public abstract string Title { get; }
@@ -17,7 +12,6 @@ public abstract class PeriodPreset
 
     public override string ToString() => Title;
 
-    /// <summary>Порядок пресетів у панелі вікна формування.</summary>
     public static IReadOnlyList<PeriodPreset> All { get; } = new PeriodPreset[]
     {
         new TodayPreset(),
@@ -51,13 +45,12 @@ public sealed class LastSevenDaysPreset : PeriodPreset
     protected override DatePeriod Resolve(DateTime today) => new(today.AddDays(-6), today);
 }
 
-/// <summary>Минулий тиждень, понеділок–неділя.</summary>
 public sealed class PreviousWeekPreset : PeriodPreset
 {
     public override string Title => "Минулий тиждень";
     protected override DatePeriod Resolve(DateTime today)
     {
-        int shift = ((int)today.DayOfWeek + 6) % 7;   // понеділок = 0
+        int shift = ((int)today.DayOfWeek + 6) % 7;
         var thisMonday = today.AddDays(-shift);
         var lastMonday = thisMonday.AddDays(-7);
         return new DatePeriod(lastMonday, lastMonday.AddDays(6));

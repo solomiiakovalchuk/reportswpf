@@ -4,7 +4,6 @@ using Reports.Core.Domain;
 
 namespace Reports.Data.Repositories;
 
-/// <summary>Подані епізоди разом із цілями, боєприпасами та довідниками.</summary>
 public sealed class MissionRepository : IMissionRepository
 {
     private readonly IDbContextFactory<AppDbContext> _factory;
@@ -56,7 +55,6 @@ public sealed class MissionRepository : IMissionRepository
           .Include(m => m.Targets).ThenInclude(t => t.Munitions).ThenInclude(u => u.MunitionType);
 }
 
-/// <summary>Журнал сформованих рапортів.</summary>
 public sealed class JournalRepository : IJournalRepository
 {
     private readonly IDbContextFactory<AppDbContext> _factory;

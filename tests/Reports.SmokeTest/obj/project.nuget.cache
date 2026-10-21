@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "EA3FOA8a1yE=",
+  "dgSpecHash": "HgMwJoeT7YE=",
   "success": true,
   "projectFilePath": "D:\\ХНУ\\3kurs\\кпз\\ReportsWpf\\tests\\Reports.SmokeTest\\Reports.SmokeTest.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\vygol\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\vygol\\.nuget\\packages\\documentformat.openxml\\3.1.0\\documentformat.openxml.3.1.0.nupkg.sha512",
     "C:\\Users\\vygol\\.nuget\\packages\\documentformat.openxml.framework\\3.1.0\\documentformat.openxml.framework.3.1.0.nupkg.sha512",
     "C:\\Users\\vygol\\.nuget\\packages\\google.apis\\1.68.0\\google.apis.1.68.0.nupkg.sha512",

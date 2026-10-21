@@ -5,27 +5,15 @@ using Reports.Core.Services;
 
 namespace Reports.Integration;
 
-/// <summary>
-/// Дописує у Google-таблицю те, що зʼявилося в застосунку: нові позиції
-/// довідників, нових людей і зміни колонки «Статус».
-/// <para>
-/// Працює <b>тільки на додавання</b>: наявні рядки не переписуються й не
-/// видаляються. Над тією самою таблицею працює ще й Apps Script, тому
-/// затирати чужі правки застосунок не має права.
-/// </para>
-/// </summary>
 public sealed class GoogleSheetsWriter : IResponseSink
 {
-    /// <summary>Ліві колонки чотирьох блоків аркуша «Довідники»: A, D, G, J.</summary>
     private const int UavColumn = 0;
     private const int TargetColumn = 3;
     private const int MunitionColumn = 6;
     private const int SettlementColumn = 9;
 
-    /// <summary>Дані блоків довідників починаються з третього рядка.</summary>
     private const int DirectoryFirstRow = 3;
 
-    /// <summary>Дані аркуша «Люди» починаються з другого рядка.</summary>
     private const int PeopleFirstRow = 2;
 
     private readonly GoogleAuthenticator _authenticator;
@@ -82,7 +70,6 @@ public sealed class GoogleSheetsWriter : IResponseSink
         return new PublishResult(directoriesAdded, peopleAdded, statusesUpdated, notes);
     }
 
-    /// <summary>Дописує в кожен блок довідників позиції, яких у ньому ще немає.</summary>
     private async Task<int> PlanDirectoriesAsync(
         SheetsService service, PublishPayload payload, List<ValueRange> updates, CancellationToken ct)
     {
@@ -109,7 +96,7 @@ public sealed class GoogleSheetsWriter : IResponseSink
             if (value.Length == 0) continue;
 
             existing.Add(value);
-            nextRow = i + 2;   // наступний рядок після останнього заповненого
+            nextRow = i + 2;
         }
 
         var fresh = items
@@ -130,7 +117,6 @@ public sealed class GoogleSheetsWriter : IResponseSink
         return fresh.Count;
     }
 
-    /// <summary>Дописує людей, яких немає в аркуші «Люди» за адресою пошти.</summary>
     private async Task<int> PlanPeopleAsync(
         SheetsService service, PublishPayload payload, List<ValueRange> updates, CancellationToken ct)
     {
@@ -162,10 +148,6 @@ public sealed class GoogleSheetsWriter : IResponseSink
         return fresh.Count;
     }
 
-    /// <summary>
-    /// Проставляє колонку «Статус» там, де локальне значення відрізняється
-    /// від того, що вже стоїть у таблиці. Якщо колонки немає — створює її.
-    /// </summary>
     private async Task<int> PlanStatusesAsync(
         SheetsService service, PublishPayload payload,
         List<ValueRange> updates, List<string> notes, CancellationToken ct)
@@ -184,7 +166,6 @@ public sealed class GoogleSheetsWriter : IResponseSink
 
         if (statusColumn < 0)
         {
-            // Колонки ще немає: створюємо її одразу за останньою наявною.
             statusColumn = rows.Max(r => r.Count);
             updates.Add(new ValueRange
             {
@@ -215,10 +196,6 @@ public sealed class GoogleSheetsWriter : IResponseSink
         return changed;
     }
 
-    /// <summary>
-    /// Номер рядка джерела зашитий у ключі імпорту «позначка часу|номер рядка» —
-    /// саме заради цього запису він там і зберігається.
-    /// </summary>
     private static bool TryGetRowNumber(string sourceRowKey, out int rowNumber)
     {
         rowNumber = 0;

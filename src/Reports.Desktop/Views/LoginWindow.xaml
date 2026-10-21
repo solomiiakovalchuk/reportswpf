@@ -1,0 +1,75 @@
+<ui:FluentWindow x:Class="Reports.Desktop.Views.LoginWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:vm="clr-namespace:Reports.Desktop.ViewModels"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 mc:Ignorable="d"
+                 d:DataContext="{d:DesignInstance vm:LoginViewModel}"
+                 Title="Рапорти БпЛА"
+                 Width="400" Height="420"
+                 MinWidth="360" MinHeight="380"
+                 WindowStartupLocation="CenterScreen"
+                 WindowBackdropType="Mica"
+                 ExtendsContentIntoTitleBar="True"
+                 ResizeMode="NoResize">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Grid.Row="0" Title="Рапорти БпЛА" />
+
+        <Border Grid.Row="1" Padding="32,24">
+            <StackPanel VerticalAlignment="Center" MaxWidth="300">
+
+                <ui:SymbolIcon Symbol="ShieldLock24" FontSize="48"
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                               Margin="0,0,0,16" />
+
+                <ui:TextBlock Text="Вхід до системи"
+                              FontTypography="Title"
+                              HorizontalAlignment="Center"
+                              Margin="0,0,0,24" />
+
+                <ui:TextBlock Text="Логін" FontTypography="BodyStrong" Margin="0,0,0,4" />
+                <ui:TextBox x:Name="UsernameBox"
+                            Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                            PlaceholderText="Введіть логін"
+                            Margin="0,0,0,12"
+                            KeyDown="UsernameBox_KeyDown" />
+
+                <ui:TextBlock Text="Пароль" FontTypography="BodyStrong" Margin="0,0,0,4" />
+                <PasswordBox x:Name="PasswordBox"
+                             Margin="0,0,0,8"
+                             KeyDown="PasswordBox_KeyDown" />
+
+                <ui:TextBlock x:Name="ErrorText"
+                              Text="{Binding ErrorMessage}"
+                              Foreground="{DynamicResource SystemFillColorCriticalBrush}"
+                              FontTypography="Caption"
+                              Margin="0,0,0,16"
+                              Visibility="{Binding ErrorMessage,
+                                           Converter={StaticResource EmptyToCollapsed}}" />
+
+                <ui:Button x:Name="LoginBtn"
+                           Content="Увійти"
+                           Appearance="Primary"
+                           HorizontalAlignment="Stretch"
+                           IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBool}}"
+                           Click="LoginBtn_Click" />
+
+                <ui:Button Content="Забули пароль?"
+                           Appearance="Transparent"
+                           HorizontalAlignment="Center"
+                           Margin="0,8,0,0"
+                           Click="ForgotPassword_Click" />
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</ui:FluentWindow>
