@@ -191,7 +191,9 @@ public sealed class GoogleSheetsResponseSource : IResponseSource
         if (value.Length == 0) return value;
 
         var match = System.Text.RegularExpressions.Regex.Match(
-            value, @"/spreadsheets/d/([a-zA-Z0-9-_]+)");
+            value, @"/spreadsheets/d/([a-zA-Z0-9-_]+)",
+            System.Text.RegularExpressions.RegexOptions.None,
+            TimeSpan.FromSeconds(1));
         if (match.Success) return match.Groups[1].Value;
 
         return value;
