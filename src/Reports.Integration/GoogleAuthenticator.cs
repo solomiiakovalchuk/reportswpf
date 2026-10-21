@@ -47,7 +47,7 @@ public sealed class GoogleAuthenticator
         try
         {
             await using var stream = File.OpenRead(_credentialsPath);
-            var secrets = GoogleClientSecrets.FromStream(stream).Secrets;
+            var secrets = (await GoogleClientSecrets.FromStreamAsync(stream, consentTimeout.Token)).Secrets;
             credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                 secrets,
                 Scopes,
@@ -108,7 +108,7 @@ public sealed class GoogleAuthenticator
         try
         {
             await using var stream = File.OpenRead(_credentialsPath);
-            var secrets = GoogleClientSecrets.FromStream(stream).Secrets;
+            var secrets = (await GoogleClientSecrets.FromStreamAsync(stream, timeout.Token)).Secrets;
             credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                 secrets,
                 [.. Scopes, "email", "openid"],

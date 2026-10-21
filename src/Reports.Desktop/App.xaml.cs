@@ -27,11 +27,10 @@ public partial class App : Application
             var loginVm = new LoginViewModel(services.Auth);
             var loginWindow = new LoginWindow { DataContext = loginVm, Services = services };
 
-            bool loggedIn = false;
-            loginVm.LoginSucceeded += (_, _) => { loginWindow.Close(); loggedIn = true; };
+            loginVm.LoginSucceeded += (_, _) => loginWindow.Close();
             loginWindow.ShowDialog();
 
-            if (!loggedIn) { Shutdown(0); return; }
+            if (!services.Auth.IsAuthenticated) { Shutdown(0); return; }
 
             var model = new MainViewModel(services);
             await model.LoadAsync();
